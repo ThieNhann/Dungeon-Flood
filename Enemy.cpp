@@ -147,13 +147,37 @@ void EnemyManager::Draw() {
 }
 
 void EnemyManager::Update() {
-    for (auto& e : enemies) {
-        e->Update();
+    static float lastWaveSpawnTime = 0.0f;
+    static int waveCounter = 1;
+    float now = GetTime();
+    if ((now - lastWaveSpawnTime) >= 5.0f) {
+        Vector2 spawnPositions[4] = {
+            {720, -50},   // Top gate
+            {-50, 425},   // Left gate
+            {1490, 425},  // Right gate
+            {720, 950}    // Bottom gate
+        };
+        for (auto pos : spawnPositions) {
+            for (int i = 0; i < waveCounter; i++) {
+                float offsetX = (i % 3) * 45.0f;
+                float offsetY = (i / 3) * 45.0f;
+                Vector2 newSpawnPos = { pos.x + offsetX, pos.y + offsetY };
+                EnemyManager::AddEnemy(new Goblin(newSpawnPos));
+            }
+        }
+        if (waveCounter <= 8) waveCounter++;
+        lastWaveSpawnTime = now;
     }
-    enemies.erase(remove_if(enemies.begin(), enemies.end(), [](const Enemy* e) {
-        return e->isDead();
-    }),
-    enemies.end());
+
+    for (auto it = enemies.begin(); it != enemies.end();) {
+        if (!(*it)->isDead()) {
+            (*it)->Update();
+            ++it;
+        } else {
+            delete *it;
+            it = enemies.erase(it);
+        }
+    }
 }
 
 void EnemyManager::Destruct() {

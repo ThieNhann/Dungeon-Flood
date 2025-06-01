@@ -7,7 +7,7 @@ const int SCREEN_WIDTH = 1440;
 const int SCREEN_HEIGHT = 900;
 
 const int PLAYER_SPEED = 200;
-const int GOBLIN_SPEED = 100;
+const int GOBLIN_SPEED = 150;
 const int FIREBALL_SPEED = 300;
 
 #endif

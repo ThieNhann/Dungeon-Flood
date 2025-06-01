@@ -20,20 +20,14 @@ int main () {
     HorizontalWall::LoadWallTexture();
     WallManager::InitCornerWalls();
 
-    for (int i = 0; i < 5; ++i) {
-        Enemy* g = new Goblin({700.0f, (float)(200 + i * 100)});
-        EnemyManager::AddEnemy(g);
-    }
-
     while (WindowShouldClose() == false){
         Player::Instance().Update();
         FireballManager::RemoveOutOfBoundFireballs();
         EnemyManager::Update();
         auto& fireballs = FireballManager::GetFireballs();
-        auto& enemies = EnemyManager::GetEnemies();
         for (auto it = fireballs.begin(); it != fireballs.end();) {
             bool hit = false;
-            for (auto& e : enemies) {
+            for (auto& e : EnemyManager::GetEnemies()) {
                 if (CheckCollisionRecs(it->GetHitbox(), e->GetHitbox())) {
                     e->TakeDamage(it->GetDamage());
                     it = fireballs.erase(it);
@@ -49,10 +43,6 @@ int main () {
             FireballManager::Draw();
             EnemyManager::Draw();
             WallManager::Draw();
-            /*DrawRectangle(820, 0, 620, 50, GREEN);
-            DrawRectangle(0, 0, 620, 50, GREEN);
-            DrawRectangle(0, 0, 50, 350, GREEN);
-            DrawRectangle(0, 500, 50, 350, GREEN);*/
         EndDrawing();
     }
     VerticalWall::UnloadWallTexture();
@@ -62,4 +52,4 @@ int main () {
     Fireball::UnloadFireballTexture();
     WallManager::Destruct();
     CloseWindow();
-} 
+}
