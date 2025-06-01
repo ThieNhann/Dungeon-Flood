@@ -39,6 +39,7 @@ public:
     static std::vector<RectWall*> walls;
     static void InitCornerWalls();
     static void Draw();
+    static std::vector<RectWall*>& GetWalls();
 };
 
 

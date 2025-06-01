@@ -83,6 +83,13 @@ void Player::Update() {
             break;
         }
     }
+
+    for (auto& w : WallManager::GetWalls()) {
+        if (CheckCollisionRecs(newHitbox, w->GetHitbox())) {
+            collision = true;
+            break;
+        }
+    }
     
     if (!collision) {
         hitbox.x = newHitbox.x;

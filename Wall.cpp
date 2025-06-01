@@ -58,3 +58,7 @@ void WallManager::InitCornerWalls() {
 void WallManager::Draw() {
     for (auto& w : walls) w->Draw();
 }
+
+std::vector<RectWall*>& WallManager::GetWalls() {
+    return walls;
+}

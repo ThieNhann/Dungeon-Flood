@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Projectile.h"
 #include "Enemy.h"
-
+#include "Wall.h"
 class PlayerTexture {
 private:
     static Texture up;
