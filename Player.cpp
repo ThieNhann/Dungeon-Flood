@@ -83,11 +83,16 @@ void Player::Update() {
             break;
         }
     }
-
+    
     if (!collision) {
         hitbox.x = newHitbox.x;
         hitbox.y = newHitbox.y;
     }
+
+    // Fireball cooldown logic (không chỉnh sửa class)
+    static float lastFireTime = 0.0f;
+    const float fireCooldown = 0.25f; // giây
+    float now = GetTime();
 
     Direction fireDirection;
     bool fire = false;
@@ -108,9 +113,10 @@ void Player::Update() {
         direction = DOWN;
         fire = true;
     }
-    if (fire) {
-        Fireball fireball({hitbox.x, hitbox.y}, fireDirection);
+    if (fire && (now - lastFireTime) >= fireCooldown) {
+        Fireball fireball({hitbox.x + 15, hitbox.y + 10}, fireDirection);
         FireballManager::AddFireball(fireball);
+        lastFireTime = now;
     }
 }
 
