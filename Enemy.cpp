@@ -43,6 +43,13 @@ void Goblin::Update() {
         direction.x /= distance;
         direction.y /= distance;
     }
+
+    if (fabs(direction.x) > fabs(direction.y)) {
+        facing = (direction.x > 0) ? RIGHT : LEFT;
+    } else {
+        facing = (direction.y > 0) ? DOWN : UP;
+    }
+
     float t = GetFrameTime();
     hitbox.x += direction.x * speed * t;
     hitbox.y += direction.y * speed * t;
