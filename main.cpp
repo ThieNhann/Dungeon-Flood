@@ -20,6 +20,7 @@ int main () {
     while (WindowShouldClose() == false){
         Player::Instance().Update();
         FireballManager::RemoveOutOfBoundFireballs();
+        g.Update();
         BeginDrawing();
             ClearBackground(BLACK);
             Player::Instance().DrawPlayer();

@@ -1,8 +1,10 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include "Player.h"
 #include <raylib.h>
 #include "Config.h"
+#include <cmath>
 
 class GoblinTexture {
 private:
@@ -42,7 +44,7 @@ public:
         facing = DOWN;
     }
     void Draw();
-    void Update() {}
+    void Update();
 };
 
 #endif
