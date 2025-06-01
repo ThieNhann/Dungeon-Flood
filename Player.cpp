@@ -25,8 +25,8 @@ Vector2 Player::GetPlayerPosition() {
 
 Player::Player() {
     direction = DOWN;
-    hitbox.width = 64;
-    hitbox.height = 64;
+    hitbox.width = 40;
+    hitbox.height = 40;
     hitbox.x = 720;
     hitbox.y = 450;
     speed = 200;
@@ -38,6 +38,9 @@ Player& Player::Instance() {
     return instance;
 }
 
+Rectangle Player::GetHitbox() {
+    return Player::Instance().hitbox;
+}
 void Player::DrawPlayer() {
     DrawTextureV(texture.GetTexture(direction), GetPlayerPosition(), WHITE);
 }
@@ -49,22 +52,41 @@ void Player::SetPosition(Vector2 pos) {
 
 void Player::Update() {
     float t = GetFrameTime();
+    Vector2 newPos = {hitbox.x, hitbox.y};
 
     if (IsKeyDown(KEY_W)) {
         SetDirection(UP);
-        hitbox.y -= t * speed;  
+        newPos.y -= t * speed;  
     }
     if (IsKeyDown(KEY_S)) {
         SetDirection(DOWN);
-        hitbox.y += t * speed;
+        newPos.y += t * speed;
     }
     if (IsKeyDown(KEY_D)) {
         SetDirection(RIGHT); 
-        hitbox.x += t * speed;
+        newPos.x += t * speed;
     }
     if (IsKeyDown(KEY_A)) {
         SetDirection(LEFT);
-        hitbox.x -= t * speed;
+        newPos.x -= t * speed;
+    }
+
+    Rectangle newHitbox = hitbox;
+    newHitbox.x = newPos.x;
+    newHitbox.y = newPos.y;
+
+    bool collision = false;
+
+    for (auto& en : EnemyManager::GetEnemies()) {
+        if (!en ->isDead() && CheckCollisionRecs(newHitbox, en->GetHitbox())) {
+            collision = true;
+            break;
+        }
+    }
+
+    if (!collision) {
+        hitbox.x = newHitbox.x;
+        hitbox.y = newHitbox.y;
     }
 
     Direction fireDirection;

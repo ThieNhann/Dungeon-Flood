@@ -5,8 +5,15 @@ vector<Fireball> FireballManager::fireballs;
 
 Fireball::Fireball(Vector2 pos, Direction d)  : direction(d) {
     speed = 300;
-    hitbox.height = 7;
-    hitbox.width = 13;
+    if (d == LEFT || d == RIGHT) {
+        hitbox.height = 7;
+        hitbox.width = 13;
+    }
+    else {
+        hitbox.height = 13;
+        hitbox.width = 7;
+    }
+    damage = 1;
     hitbox.x = pos.x;
     hitbox.y = pos.y;
 }
@@ -28,7 +35,9 @@ void Fireball::Draw() {
         case LEFT: rotation = 180.0f; break;
         default: break;
     }
-    DrawTextureEx(texture, {hitbox.x, hitbox.y + 43}, rotation, 1.0f, WHITE);
+    Vector2 texturePos = { hitbox.x + hitbox.width / 2.0f, hitbox.y + hitbox.height / 2.0f };
+    DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, RED);
+    DrawTextureEx(texture, texturePos, rotation, 1.0f, WHITE);
 }
 
 void Fireball::Update() {
@@ -46,6 +55,8 @@ bool Fireball::IsOutOfScreen() const {
     return hitbox.x < 0 || hitbox.x > 1440 || hitbox.y < 0 || hitbox.y > 900;
 }
 
+Rectangle Fireball::GetHitbox() const { return hitbox; }
+int Fireball::GetDamage() { return damage; }
 
 void FireballManager::Draw() {
     for (auto& f : fireballs) {
@@ -65,4 +76,8 @@ void FireballManager::RemoveOutOfBoundFireballs() {
 
 void FireballManager::AddFireball(Fireball& f) {
     fireballs.push_back(f);
+}
+
+vector<Fireball>& FireballManager::GetFireballs() {
+    return fireballs;
 }

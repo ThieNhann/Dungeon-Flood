@@ -4,6 +4,7 @@
 #include <raylib.h>
 #include <iostream>
 #include "Projectile.h"
+#include "Enemy.h"
 
 class PlayerTexture {
 private:
@@ -32,6 +33,7 @@ private:
     int speed;
 public:
     static Player& Instance();
+    static Rectangle GetHitbox();
     Player();
     void Update();
     Direction GetDirection();
