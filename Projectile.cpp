@@ -36,7 +36,6 @@ void Fireball::Draw() {
         default: break;
     }
     Vector2 texturePos = { hitbox.x + hitbox.width / 2.0f, hitbox.y + hitbox.height / 2.0f };
-    DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, RED);
     DrawTextureEx(texture, texturePos, rotation, 1.0f, WHITE);
 }
 

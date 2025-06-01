@@ -75,8 +75,35 @@ void Goblin::Update() {
     if (!collision) {
         hitbox.x = newPos.x;
         hitbox.y = newPos.y;
-    }
+    } else {
+        Rectangle tryX = hitbox;
+        tryX.x = hitbox.x + direction.x * speed * t;
+        bool colX = false;
+        for (auto& other : EnemyManager::GetEnemies()) {
+            if (other != this && CheckCollisionRecs(tryX, other->GetHitbox())) {
+                colX = true;
+                break;
+            }
+        }
+        if (!colX && !CheckCollisionRecs(tryX, Player::Instance().GetHitbox())) {
+            hitbox.x = tryX.x;
+            return;
+        }
 
+        Rectangle tryY = hitbox;
+        tryY.y = hitbox.y + direction.y * speed * t;
+        bool colY = false;
+        for (auto& other : EnemyManager::GetEnemies()) {
+            if (other != this && CheckCollisionRecs(tryY, other->GetHitbox())) {
+                colY = true;
+                break;
+            }
+        }
+        if (!colY && !CheckCollisionRecs(tryY, Player::Instance().GetHitbox())) {
+            hitbox.y = tryY.y;
+            return;
+        }
+    }
 }
 
 Rectangle Goblin::GetHitbox() {
