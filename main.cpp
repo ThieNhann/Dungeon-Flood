@@ -2,7 +2,7 @@
 #include "Projectile.h"
 #include "Enemy.h"
 #include "Wall.h"
-
+#include "SFX.h"
 using namespace std;
 
 int main () { 
@@ -11,6 +11,7 @@ int main () {
     const int SCREEN_HEIGHT = 900;
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dungeon Flood");
+    InitAudioDevice();
     SetTargetFPS(60);
 
     PlayerTexture::LoadTextures();
@@ -19,8 +20,10 @@ int main () {
     VerticalWall::LoadWallTexture();
     HorizontalWall::LoadWallTexture();
     WallManager::InitCornerWalls();
-
+    SFX::LoadSFX();
+    PlayMusicStream(SFX::bgMusic);
     while (WindowShouldClose() == false){
+        UpdateMusicStream(SFX::bgMusic);
         Player::Instance().Update();
         FireballManager::RemoveOutOfBoundFireballs();
         EnemyManager::Update();
@@ -30,6 +33,7 @@ int main () {
             for (auto& e : EnemyManager::GetEnemies()) {
                 if (CheckCollisionRecs(it->GetHitbox(), e->GetHitbox())) {
                     e->TakeDamage(it->GetDamage());
+                    PlaySound(SFX::goblinHurt);
                     it = fireballs.erase(it);
                     hit = true;
                     break;
@@ -45,11 +49,14 @@ int main () {
             WallManager::Draw();
         EndDrawing();
     }
+    StopMusicStream(SFX::bgMusic);
+    SFX::UnloadSFX();
     VerticalWall::UnloadWallTexture();
     HorizontalWall::UnloadWallTexture();
     EnemyManager::Destruct();
     PlayerTexture::UnloadTextures();
     Fireball::UnloadFireballTexture();
     WallManager::Destruct();
+    CloseAudioDevice();
     CloseWindow();
 }

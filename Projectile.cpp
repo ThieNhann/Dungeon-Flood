@@ -9,7 +9,7 @@ Fireball::Fireball(Vector2 pos, Direction d)  : direction(d) {
         hitbox.height = 7;
         hitbox.width = 13;
     }
-    else {
+    else { 
         hitbox.height = 13;
         hitbox.width = 7;
     }

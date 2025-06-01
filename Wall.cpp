@@ -67,4 +67,4 @@ void WallManager::Destruct() {
     for (auto& w : walls) {
         delete w;
     }
-}
+} 

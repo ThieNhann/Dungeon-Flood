@@ -97,7 +97,7 @@ void Player::Update() {
     }
 
     static float lastFireTime = 0.0f;
-    const float fireCooldown = 0.25f; // giây
+    const float fireCooldown = 0.25f;
     float now = GetTime();
 
     Direction fireDirection;
@@ -122,6 +122,7 @@ void Player::Update() {
     if (fire && (now - lastFireTime) >= fireCooldown) {
         Fireball fireball({hitbox.x + 15, hitbox.y + 10}, fireDirection);
         FireballManager::AddFireball(fireball);
+        PlaySound(SFX::fireball);
         lastFireTime = now;
     }
 }

@@ -23,7 +23,7 @@ public:
     static void LoadWallTexture();
     static void UnloadWallTexture();
 };
-
+ 
 class HorizontalWall : public RectWall {
 private:
     static Texture texture;

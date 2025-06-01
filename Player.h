@@ -6,6 +6,8 @@
 #include "Projectile.h"
 #include "Enemy.h"
 #include "Wall.h"
+#include "SFX.h"
+
 class PlayerTexture {
 private:
     static Texture up;

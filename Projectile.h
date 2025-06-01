@@ -17,7 +17,7 @@ private:
     float speed;
     int damage;
 public:
-    Fireball(Vector2 pos, Direction d);
+    Fireball(Vector2 pos, Direction d); 
     bool IsOutOfScreen() const;
     static void LoadFireballTexture();
     static void UnloadFireballTexture();
