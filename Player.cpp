@@ -29,7 +29,7 @@ Player::Player() {
     hitbox.height = 40;
     hitbox.x = 720;
     hitbox.y = 450;
-    speed = 200;
+    speed = PLAYER_SPEED;
     texture.LoadTextures();
 }
 

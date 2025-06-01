@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Projectile.h"
 #include "Enemy.h"
+#include "Wall.h"
 
 using namespace std;
 
@@ -15,6 +16,10 @@ int main () {
     PlayerTexture::LoadTextures();
     Fireball::LoadFireballTexture();
     GoblinTexture::LoadGoblinTextures();
+    VerticalWall::LoadWallTexture();
+    HorizontalWall::LoadWallTexture();
+    WallManager::InitCornerWalls();
+
     for (int i = 0; i < 10; ++i) {
         Enemy* g = new Goblin({500.0f + i*60, (float)(300 + i * 200)});
         EnemyManager::AddEnemy(g);
@@ -43,8 +48,15 @@ int main () {
             Player::Instance().DrawPlayer();
             FireballManager::Draw();
             EnemyManager::Draw();
+            WallManager::Draw();
+            /*DrawRectangle(820, 0, 620, 50, GREEN);
+            DrawRectangle(0, 0, 620, 50, GREEN);
+            DrawRectangle(0, 0, 50, 350, GREEN);
+            DrawRectangle(0, 500, 50, 350, GREEN);*/
         EndDrawing();
     }
+    VerticalWall::UnloadWallTexture();
+    HorizontalWall::UnloadWallTexture();
     EnemyManager::Destruct();
     PlayerTexture::UnloadTextures();
     Fireball::UnloadFireballTexture();
