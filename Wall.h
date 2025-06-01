@@ -10,7 +10,7 @@ protected:
     Rectangle hitbox;
 public:
     virtual void Draw() = 0;
-    ~RectWall() {}
+    virtual ~RectWall() {}
     Rectangle GetHitbox() { return hitbox; }
 };
 
@@ -40,6 +40,7 @@ public:
     static void InitCornerWalls();
     static void Draw();
     static std::vector<RectWall*>& GetWalls();
+    static void Destruct();
 };
 
 

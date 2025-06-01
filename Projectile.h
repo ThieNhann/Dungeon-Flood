@@ -4,7 +4,8 @@
 #include <raylib.h>
 #include <vector>
 #include <algorithm>
-#include "Config.h" // Add this include
+#include "Wall.h"
+#include "Config.h"
 
 using namespace std;
 

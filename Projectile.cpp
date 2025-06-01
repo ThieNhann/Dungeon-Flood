@@ -1,5 +1,5 @@
 #include "Projectile.h"
-
+#include <iostream>
 Texture Fireball::texture;
 vector<Fireball> FireballManager::fireballs;
 
@@ -68,6 +68,11 @@ void FireballManager::RemoveOutOfBoundFireballs() {
         f.Update();
     }
     fireballs.erase(remove_if(fireballs.begin(), fireballs.end(), [](const Fireball& f) {
+        for (auto& w : WallManager::GetWalls()) {
+            if (CheckCollisionRecs(w->GetHitbox(), f.GetHitbox())) {
+                return true;
+            }
+        }
         return f.IsOutOfScreen();
     }),
     fireballs.end());

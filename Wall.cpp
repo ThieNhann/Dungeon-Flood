@@ -62,3 +62,9 @@ void WallManager::Draw() {
 std::vector<RectWall*>& WallManager::GetWalls() {
     return walls;
 }
+
+void WallManager::Destruct() {
+    for (auto& w : walls) {
+        delete w;
+    }
+}

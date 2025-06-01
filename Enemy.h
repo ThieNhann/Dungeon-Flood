@@ -5,6 +5,7 @@
 #include <raylib.h>
 #include "Config.h"
 #include <cmath>
+#include "Wall.h"
 
 class GoblinTexture {
 private:

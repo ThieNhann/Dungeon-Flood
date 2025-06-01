@@ -20,8 +20,8 @@ int main () {
     HorizontalWall::LoadWallTexture();
     WallManager::InitCornerWalls();
 
-    for (int i = 0; i < 10; ++i) {
-        Enemy* g = new Goblin({500.0f + i*60, (float)(300 + i * 200)});
+    for (int i = 0; i < 5; ++i) {
+        Enemy* g = new Goblin({700.0f, (float)(200 + i * 100)});
         EnemyManager::AddEnemy(g);
     }
 
@@ -60,5 +60,6 @@ int main () {
     EnemyManager::Destruct();
     PlayerTexture::UnloadTextures();
     Fireball::UnloadFireballTexture();
+    WallManager::Destruct();
     CloseWindow();
 } 

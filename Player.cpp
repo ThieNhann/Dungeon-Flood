@@ -96,7 +96,6 @@ void Player::Update() {
         hitbox.y = newHitbox.y;
     }
 
-    // Fireball cooldown logic (không chỉnh sửa class)
     static float lastFireTime = 0.0f;
     const float fireCooldown = 0.25f; // giây
     float now = GetTime();

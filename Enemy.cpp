@@ -68,6 +68,13 @@ void Goblin::Update() {
         }
     }
 
+    for (auto& w : WallManager::GetWalls()) {
+        if (CheckCollisionRecs(newHitbox, w->GetHitbox())) {
+            collision = true;
+            break;
+        }
+    }
+
     if (CheckCollisionRecs(newHitbox, Player::Instance().GetHitbox())) {
         collision = true;
     }
