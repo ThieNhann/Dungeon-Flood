@@ -39,7 +39,8 @@ void Goblin::Draw() {
 }
 
 void Goblin::Update() {
-    Vector2 playerPos = Player::Instance().GetPlayerPosition();
+    Player p = Player::Instance();
+    Vector2 playerPos = { p.GetHitbox().x, p.GetHitbox().y };
     Vector2 goblinPos = {hitbox.x, hitbox.y};
     Vector2 direction = {playerPos.x - goblinPos.x, playerPos.y - goblinPos.y};
     float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
@@ -165,7 +166,7 @@ void EnemyManager::Update() {
                 EnemyManager::AddEnemy(new Goblin(newSpawnPos));
             }
         }
-        if (waveCounter <= 8) waveCounter++;
+        if (waveCounter <= 1) waveCounter++;
         lastWaveSpawnTime = now;
     }
 

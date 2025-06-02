@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "Wall.h"
 #include "SFX.h"
+#include "Items.h"
 using namespace std;
 
 int main () { 
@@ -21,12 +22,21 @@ int main () {
     HorizontalWall::LoadWallTexture();
     WallManager::InitCornerWalls();
     SFX::LoadSFX();
+    ItemTexture::LoadItemTexture();
+
+    ItemManager::AddItem(new FireSpeedBoost({700, 500}));
+
     PlayMusicStream(SFX::bgMusic);
     while (WindowShouldClose() == false){
+
         UpdateMusicStream(SFX::bgMusic);
         Player::Instance().Update();
+        BoostManager::Update(Player::Instance());   
         FireballManager::RemoveOutOfBoundFireballs();
         EnemyManager::Update();
+        ItemManager::Update();
+       
+
         auto& fireballs = FireballManager::GetFireballs();
         for (auto it = fireballs.begin(); it != fireballs.end();) {
             bool hit = false;
@@ -41,15 +51,22 @@ int main () {
             }
             if (!hit) ++it;
         }
+
         BeginDrawing();
+
             ClearBackground(BLACK);
             Player::Instance().DrawPlayer();
+            ItemManager::Draw();
             FireballManager::Draw();
             EnemyManager::Draw();
             WallManager::Draw();
+
         EndDrawing();
     }
+
+
     StopMusicStream(SFX::bgMusic);
+    ItemTexture::UnloadItemTexture();
     SFX::UnloadSFX();
     VerticalWall::UnloadWallTexture();
     HorizontalWall::UnloadWallTexture();
@@ -57,6 +74,7 @@ int main () {
     PlayerTexture::UnloadTextures();
     Fireball::UnloadFireballTexture();
     WallManager::Destruct();
+    BoostManager::Destruct();
     CloseAudioDevice();
     CloseWindow();
 }

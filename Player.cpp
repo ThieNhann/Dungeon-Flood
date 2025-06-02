@@ -19,8 +19,12 @@ void PlayerTexture::UnloadTextures() {
     UnloadTexture(right);
 }
 
-Vector2 Player::GetPlayerPosition() {
-    return {hitbox.x, hitbox.y};
+void Player::SetFireCooldown(float cd) {
+    fireCooldown = cd;
+}
+
+float Player::GetFireCooldown() {
+    return fireCooldown;
 }
 
 Player::Player() {
@@ -31,6 +35,7 @@ Player::Player() {
     hitbox.y = 450;
     speed = PLAYER_SPEED;
     texture.LoadTextures();
+    fireCooldown = 0.25;
 }
 
 Player& Player::Instance() {
@@ -42,7 +47,7 @@ Rectangle Player::GetHitbox() {
     return Player::Instance().hitbox;
 }
 void Player::DrawPlayer() {
-    DrawTextureV(texture.GetTexture(direction), GetPlayerPosition(), WHITE);
+    DrawTextureV(texture.GetTexture(direction), {hitbox.x, hitbox.y}, WHITE);
 }
 
 void Player::SetPosition(Vector2 pos) {
@@ -97,7 +102,6 @@ void Player::Update() {
     }
 
     static float lastFireTime = 0.0f;
-    const float fireCooldown = 0.25f;
     float now = GetTime();
 
     Direction fireDirection;

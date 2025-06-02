@@ -33,6 +33,7 @@ private:
     Rectangle hitbox;
     Direction direction;
     int speed;
+    float fireCooldown;
 public:
     static Player& Instance();
     static Rectangle GetHitbox();
@@ -41,7 +42,8 @@ public:
     Direction GetDirection();
     void SetDirection(Direction);
     void SetPosition(Vector2);
-    Vector2 GetPlayerPosition();
+    void SetFireCooldown(float);
+    float GetFireCooldown();
     void DrawPlayer();
 };
 
