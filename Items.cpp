@@ -78,3 +78,27 @@ void ItemManager::Destruct() {
         delete i;
     }
 }
+
+void ItemSpawn() {
+    static std::vector<ItemType> types = { FIRESPEEDBOOST };
+    static float lastSpawnTime = 0.0f;
+    float now = GetTime();
+
+    if (now - lastSpawnTime >= 15.0f) {
+        int typeIdx = GetRandomValue(0, types.size() - 1);
+        ItemType type = types[typeIdx];
+        float x = GetRandomValue(50, SCREEN_WIDTH - 75);
+        float y = GetRandomValue(50, SCREEN_HEIGHT - 75);
+
+        Item* item = nullptr;
+
+        switch (type) {
+            case FIRESPEEDBOOST:
+                item = new FireSpeedBoost({x, y});
+                break;
+        }
+        
+        if (item) ItemManager::AddItem(item);
+        lastSpawnTime = now;
+    }
+}

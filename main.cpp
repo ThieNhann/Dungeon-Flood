@@ -24,7 +24,7 @@ int main () {
     SFX::LoadSFX();
     ItemTexture::LoadItemTexture();
 
-    ItemManager::AddItem(new FireSpeedBoost({700, 500}));
+    Texture2D background = LoadTexture("resources/images/background.png");
 
     PlayMusicStream(SFX::bgMusic);
     while (WindowShouldClose() == false){
@@ -36,6 +36,7 @@ int main () {
         EnemyManager::Update();
         ItemManager::Update();
        
+        ItemSpawn();
 
         auto& fireballs = FireballManager::GetFireballs();
         for (auto it = fireballs.begin(); it != fireballs.end();) {
@@ -55,6 +56,7 @@ int main () {
         BeginDrawing();
 
             ClearBackground(BLACK);
+            DrawTexture(background, 0, 0, WHITE);
             Player::Instance().DrawPlayer();
             ItemManager::Draw();
             FireballManager::Draw();

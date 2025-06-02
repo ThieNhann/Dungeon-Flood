@@ -46,4 +46,6 @@ public:
     static void Destruct();
 };
 
+void ItemSpawn();
+
 #endif
