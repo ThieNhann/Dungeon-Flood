@@ -45,14 +45,15 @@ void HorizontalWall::UnloadWallTexture() {
 
 void WallManager::InitCornerWalls() {
     walls.clear();
-    walls.emplace_back(new HorizontalWall({0, -15}));
-    walls.emplace_back(new VerticalWall({0, 0}));
+    
     walls.emplace_back(new VerticalWall({0, 600}));
-    walls.emplace_back(new HorizontalWall({820, -15}));
-    walls.emplace_back(new VerticalWall({1390, 0}));
     walls.emplace_back(new VerticalWall({1390, 600}));
+    walls.emplace_back(new HorizontalWall({0, -15}));
+    walls.emplace_back(new HorizontalWall({820, -15}));
     walls.emplace_back(new HorizontalWall({0, 850}));
     walls.emplace_back(new HorizontalWall({820, 850}));
+    walls.emplace_back(new VerticalWall({0, 0}));
+    walls.emplace_back(new VerticalWall({1390, 0}));
 }
 
 void WallManager::Draw() {
