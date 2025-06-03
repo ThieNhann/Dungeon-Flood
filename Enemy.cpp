@@ -54,7 +54,7 @@ void Goblin::Update() {
     }
 
     Vector2 separation = {0, 0};
-    const float SEPARATION_RADIUS = 10.0f;
+    const float SEPARATION_RADIUS = GOBLIN_SEPARATION_RADIUS;
     int neighborCount = 0;
 
     for (auto& other : EnemyManager::GetEnemies()) {
@@ -79,8 +79,8 @@ void Goblin::Update() {
         }
     }
 
-    const float CHASE_WEIGHT = 1.0f;
-    const float SEPARATION_WEIGHT = 1.2f;
+    const float CHASE_WEIGHT = GOBLIN_CHASE_WEIGHT;
+    const float SEPARATION_WEIGHT = GOBLIN_SEPARATION_WEIGHT;
     
     Vector2 direction = {
         toPlayer.x * CHASE_WEIGHT + separation.x * SEPARATION_WEIGHT,
@@ -208,30 +208,28 @@ void EnemyManager::Update() {
     static float lastWaveSpawnTime = 0.0f;
     static int waveCounter = 1;
     float now = GetTime();
-    if ((now - lastWaveSpawnTime) >= 5.0f) {
-        // Điều chỉnh vị trí spawn để nằm ngoài vùng tường
+    if ((now - lastWaveSpawnTime) >= ENEMY_SPAWN_INTERVAL) {
         Vector2 spawnPositions[4] = {
-            {720, -60},    // Top gate (ngoài map phía trên)
-            {-60, 425},    // Left gate (ngoài map bên trái)
-            {1460, 425},   // Right gate (ngoài map bên phải)
-            {720, 910}     // Bottom gate (ngoài map phía dưới)
+            {720, -60},
+            {-60, 425},
+            {1460, 425},
+            {720, 910}
         };
         for (auto pos : spawnPositions) {
             for (int i = 0; i < waveCounter; i++) {
-                float offsetX = (i % 3) * 45.0f;
-                float offsetY = (i / 3) * 45.0f;
+                float offsetX = (i % 3) * ENEMY_SPAWN_WIDTH;
+                float offsetY = (i / 3) * ENEMY_SPAWN_HEIGHT;
                 Vector2 newSpawnPos = { pos.x + offsetX, pos.y + offsetY };
 
-                // Ensure the spawn position does not overlap with existing enemies or walls
                 bool validPosition = true;
                 for (auto& e : EnemyManager::GetEnemies()) {
-                    if (CheckCollisionRecs(Rectangle{newSpawnPos.x, newSpawnPos.y, 45.0f, 45.0f}, e->GetHitbox())) {
+                    if (CheckCollisionRecs(Rectangle{newSpawnPos.x, newSpawnPos.y, ENEMY_SPAWN_WIDTH, ENEMY_SPAWN_HEIGHT}, e->GetHitbox())) {
                         validPosition = false;
                         break;
                     }
                 }
                 for (auto& w : WallManager::GetWalls()) {
-                    if (CheckCollisionRecs(Rectangle{newSpawnPos.x, newSpawnPos.y, 45.0f, 45.0f}, w->GetHitbox())) {
+                    if (CheckCollisionRecs(Rectangle{newSpawnPos.x, newSpawnPos.y, ENEMY_SPAWN_WIDTH, ENEMY_SPAWN_HEIGHT}, w->GetHitbox())) {
                         validPosition = false;
                         break;
                     }
@@ -242,7 +240,7 @@ void EnemyManager::Update() {
                 }
             }
         }
-        if (waveCounter <= 3) waveCounter++;
+        if (waveCounter <= ENEMY_SPAWN_WAVE_MAX) waveCounter++;
         lastWaveSpawnTime = now;
     }
 

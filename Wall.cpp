@@ -7,8 +7,8 @@ std::vector<RectWall*> WallManager::walls;
 VerticalWall::VerticalWall(Vector2 pos) {
     hitbox.x = pos.x;
     hitbox.y = pos.y;
-    hitbox.height = 350;
-    hitbox.width = 50;
+    hitbox.height = VERTICAL_WALL_HEIGHT;
+    hitbox.width = VERTICAL_WALL_WIDTH;
 }
 
 void VerticalWall::Draw() {
@@ -27,8 +27,8 @@ void VerticalWall::UnloadWallTexture() {
 HorizontalWall::HorizontalWall(Vector2 pos) {
     hitbox.x = pos.x;
     hitbox.y = pos.y;
-    hitbox.height = 50;
-    hitbox.width = 620;
+    hitbox.height = HORIZONTAL_WALL_HEIGHT;
+    hitbox.width = HORIZONTAL_WALL_WIDTH;
 }
 
 void HorizontalWall::Draw() {

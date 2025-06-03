@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "Player.h"
 #include <typeinfo>
+#include "Config.h"
 
 class Boost {
 protected:
@@ -25,10 +26,10 @@ class FireSpeedBoostEffect : public Boost {
 private:
     float originalCooldown;
 public:
-    FireSpeedBoostEffect() { duration = 10.0f; }
+    FireSpeedBoostEffect() { duration = BOOST_DURATION; }
     void OnStart(Player& p) {
         originalCooldown = p.GetFireCooldown();
-        p.SetFireCooldown(0.5f * originalCooldown);
+        p.SetFireCooldown(FIRESPEEDBOOST_COOLDOWN_FACTOR * originalCooldown);
     }
     void Apply(Player& p) {}
     void OnEnd(Player& p) {
@@ -40,7 +41,7 @@ class MultishotEffect : public Boost {
 private:
     float originalCooldown;
 public:
-    MultishotEffect() { duration = 10.0f; }
+    MultishotEffect() { duration = BOOST_DURATION; }
     void OnStart(Player& p) {
         p.SetMultishotMode(true);
     }

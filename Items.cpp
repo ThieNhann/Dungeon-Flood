@@ -43,7 +43,7 @@ void Item::Affect(Player& p) {
 }
 
 bool Item::ShouldDespawn() const {
-    return (GetTime() - spawnTime) >= 7.5f;
+    return (GetTime() - spawnTime) >= ITEM_DESPAWN_TIME;
 }
 
 // --- Multishot Implementation ---
@@ -51,8 +51,8 @@ Multishot::Multishot(Vector2 pos) {
     texture = ItemTexture::GetTexture(MULTISHOT);
     hitbox.x = pos.x;
     hitbox.y = pos.y;
-    hitbox.height = 32;
-    hitbox.width = 32;
+    hitbox.height = ITEM_HEIGHT;
+    hitbox.width = ITEM_WIDTH;
     effect = new MultishotEffect();
     spawnTime = GetTime();
 }
@@ -62,8 +62,8 @@ FireSpeedBoost::FireSpeedBoost(Vector2 pos) {
     texture = ItemTexture::GetTexture(FIRESPEEDBOOST);
     hitbox.x = pos.x;
     hitbox.y = pos.y;
-    hitbox.height = 32;
-    hitbox.width = 32;
+    hitbox.height = ITEM_HEIGHT;
+    hitbox.width = ITEM_WIDTH;
     effect = new FireSpeedBoostEffect();
     spawnTime = GetTime();
 }
@@ -113,7 +113,7 @@ void ItemSpawn() {
     static float lastSpawnTime = 0.0f;
     float now = GetTime();
 
-    if (now - lastSpawnTime >= (float)GetRandomValue(10, 20)) {
+    if (now - lastSpawnTime >= (float)GetRandomValue((int)ITEM_SPAWN_MIN_TIME, (int)ITEM_SPAWN_MAX_TIME)) {
         int typeIdx = GetRandomValue(0, types.size() - 1);
         ItemType type = types[typeIdx];
         float x = GetRandomValue(50, SCREEN_WIDTH - 75);

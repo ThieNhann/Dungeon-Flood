@@ -28,15 +28,15 @@ float Player::GetFireCooldown() {
 }
 
 Player::Player() {
-    health = 3;
+    health = PLAYER_HEALTH;
     direction = DOWN;
-    hitbox.width = 40;
-    hitbox.height = 40;
-    hitbox.x = 720;
-    hitbox.y = 450;
+    hitbox.width = PLAYER_WIDTH;
+    hitbox.height = PLAYER_HEIGHT;
+    hitbox.x = PLAYER_START_X;
+    hitbox.y = PLAYER_START_Y;
     speed = PLAYER_SPEED;
     texture.LoadTextures();
-    fireCooldown = 0.25;
+    fireCooldown = PLAYER_FIRE_COOLDOWN;
     multishotMode = false;
     invincibleMode = false;
 }
@@ -53,7 +53,7 @@ void Player::DrawPlayer() {
     DrawTextureV(texture.GetTexture(direction), {hitbox.x, hitbox.y}, WHITE);
     if (invincibleMode) 
     {
-        DrawTexture(IconTexture::heartProtection, hitbox.x + 30, hitbox.y - 20, WHITE);
+        DrawTexture(IconTexture::heartProtection, hitbox.x + HEART_PROTECTION_OFFSET_X, hitbox.y + HEART_PROTECTION_OFFSET_Y, WHITE);
     }
 }
 
@@ -93,7 +93,7 @@ void Player::Update() {
 
     bool collision = false;
 
-    static float lastHealthLossTime = -3.0f;
+    static float lastHealthLossTime = -PLAYER_INVINCIBLE_TIME;
     float currentTime = GetTime();
 
 
@@ -101,7 +101,7 @@ void Player::Update() {
     for (auto& en : EnemyManager::GetEnemies()) {
         if (!en->isDead() && CheckCollisionRecs(newHitbox, en->GetHitbox())) {
             collidedWithEnemy = true;
-            if ((currentTime - lastHealthLossTime) >= 3.0f) {
+            if ((currentTime - lastHealthLossTime) >= PLAYER_INVINCIBLE_TIME) {
                 if (health > 0) health--;
                 PlaySound(SFX::hurt);
                 lastHealthLossTime = currentTime;
@@ -111,7 +111,7 @@ void Player::Update() {
             break;
         }
     }
-    if (!collidedWithEnemy && (currentTime - lastHealthLossTime) >= 3.0f) {
+    if (!collidedWithEnemy && (currentTime - lastHealthLossTime) >= PLAYER_INVINCIBLE_TIME) {
         invincibleMode = false;
     }
 
@@ -122,7 +122,7 @@ void Player::Update() {
         }
     }
     
-    if (newHitbox.x >= 1440 || newHitbox.x <= 0 || newHitbox.y <= 0 || newHitbox.y >= 900) collision = true;
+    if (newHitbox.x >= SCREEN_WIDTH || newHitbox.x <= 0 || newHitbox.y <= 0 || newHitbox.y >= SCREEN_HEIGHT) collision = true;
 
     if (!collision) {
         hitbox.x = newHitbox.x;
@@ -152,18 +152,18 @@ void Player::Update() {
         fire = true;
     }
     if (fire && (now - lastFireTime) >= fireCooldown) {
-        Fireball fireball({hitbox.x + 15, hitbox.y + 10}, fireDirection);
+        Fireball fireball({hitbox.x + MULTISHOT_OFFSET_X1, hitbox.y + MULTISHOT_OFFSET_Y3}, fireDirection);
         FireballManager::AddFireball(fireball);
         if (multishotMode) {
             if (fireDirection == RIGHT || fireDirection == LEFT) {
-                Fireball additionalFireball1({hitbox.x + 15, hitbox.y - 20}, fireDirection);
+                Fireball additionalFireball1({hitbox.x + MULTISHOT_OFFSET_X1, hitbox.y + MULTISHOT_OFFSET_Y1}, fireDirection);
                 FireballManager::AddFireball(additionalFireball1);
-                Fireball additionalFireball2({hitbox.x + 15, hitbox.y + 40}, fireDirection);
+                Fireball additionalFireball2({hitbox.x + MULTISHOT_OFFSET_X1, hitbox.y + MULTISHOT_OFFSET_Y2}, fireDirection);
                 FireballManager::AddFireball(additionalFireball2);
             } else {
-                Fireball additionalFireball1({hitbox.x + 45, hitbox.y + 10}, fireDirection);
+                Fireball additionalFireball1({hitbox.x + MULTISHOT_OFFSET_X2, hitbox.y + MULTISHOT_OFFSET_Y3}, fireDirection);
                 FireballManager::AddFireball(additionalFireball1);
-                Fireball additionalFireball2({hitbox.x - 15, hitbox.y + 10}, fireDirection);
+                Fireball additionalFireball2({hitbox.x + MULTISHOT_OFFSET_X3, hitbox.y + MULTISHOT_OFFSET_Y3}, fireDirection);
                 FireballManager::AddFireball(additionalFireball2);
             }
         }

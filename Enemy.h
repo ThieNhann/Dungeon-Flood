@@ -49,12 +49,12 @@ public:
 class Goblin : public Enemy {
 public:
     Goblin(Vector2 pos) {
-        health = 1;
+        health = GOBLIN_HEALTH;
         hitbox.x = pos.x;
         hitbox.y = pos.y;
-        hitbox.width = 35;
-        hitbox.height = 35;
-        speed = 100;
+        hitbox.width = GOBLIN_WIDTH;
+        hitbox.height = GOBLIN_HEIGHT;
+        speed = GOBLIN_SPEED;
         facing = DOWN;
     }
     void Draw();

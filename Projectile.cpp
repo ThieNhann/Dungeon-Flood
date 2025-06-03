@@ -4,16 +4,16 @@ Texture Fireball::texture;
 vector<Fireball> FireballManager::fireballs;
 
 Fireball::Fireball(Vector2 pos, Direction d)  : direction(d) {
-    speed = 300;
+    speed = FIREBALL_SPEED;
     if (d == LEFT || d == RIGHT) {
-        hitbox.height = 20;
-        hitbox.width = 32;
+        hitbox.height = FIREBALL_HEIGHT_H;
+        hitbox.width = FIREBALL_WIDTH_H;
     }
     else { 
-        hitbox.height = 32;
-        hitbox.width = 20;
+        hitbox.height = FIREBALL_HEIGHT_V;
+        hitbox.width = FIREBALL_WIDTH_V;
     }
-    damage = 1;
+    damage = FIREBALL_DAMAGE;
     hitbox.x = pos.x;
     hitbox.y = pos.y;
 }
@@ -67,7 +67,7 @@ void Fireball::Update() {
 }
 
 bool Fireball::IsOutOfScreen() const {
-    return hitbox.x < 0 || hitbox.x > 1440 || hitbox.y < 0 || hitbox.y > 900;
+    return hitbox.x < 0 || hitbox.x > SCREEN_WIDTH || hitbox.y < 0 || hitbox.y > SCREEN_HEIGHT;
 }
 
 Rectangle Fireball::GetHitbox() const { return hitbox; }

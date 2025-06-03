@@ -9,8 +9,8 @@ using namespace std;
 
 int main () { 
 
-    const int SCREEN_WIDTH = 1440;
-    const int SCREEN_HEIGHT = 900;
+    const int SCREEN_WIDTH = ::SCREEN_WIDTH;
+    const int SCREEN_HEIGHT = ::SCREEN_HEIGHT;
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Dungeon Flood");
     InitAudioDevice();
@@ -65,7 +65,7 @@ int main () {
             EnemyManager::Draw();
             WallManager::Draw();
             for (int i = 0; i < Player::Instance().GetHealth(); ++i) {
-                DrawTexture(IconTexture::heart, 60 + i * 40, 60, WHITE);
+                DrawTexture(IconTexture::heart, HEART_ICON_X + i * HEART_ICON_SPACING, HEART_ICON_Y, WHITE);
             }
             
         EndDrawing();
