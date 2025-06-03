@@ -18,13 +18,18 @@ const float PLAYER_START_X = 720.0f;
 const float PLAYER_START_Y = 450.0f;
 
 // Enemy
-const int GOBLIN_SPEED = 175;
+const int GOBLIN_SPEED = 160;
 const int GOBLIN_HEALTH = 1;
 const float GOBLIN_WIDTH = 35.0f;
 const float GOBLIN_HEIGHT = 35.0f;
 const float GOBLIN_SEPARATION_RADIUS = 10.0f;
 const float GOBLIN_CHASE_WEIGHT = 1.0f;
 const float GOBLIN_SEPARATION_WEIGHT = 1.2f;
+
+const int MUSHROOM_SPEED = 110;
+const int MUSHROOM_HEALTH = 3;
+const float MUSHROOM_WIDTH = 50.0f;
+const float MUSHROOM_HEIGHT = 50.0f;
 
 // Fireball
 const int FIREBALL_SPEED = 300;
@@ -72,6 +77,6 @@ const float MULTISHOT_OFFSET_Y3 = 10.0f;
 const float ENEMY_SPAWN_INTERVAL = 5.0f;
 const float ENEMY_SPAWN_WIDTH = 45.0f;
 const float ENEMY_SPAWN_HEIGHT = 45.0f;
-const int ENEMY_SPAWN_WAVE_MAX = 3;
+const int ENEMY_SPAWN_WAVE_MAX = 7;
 
 #endif

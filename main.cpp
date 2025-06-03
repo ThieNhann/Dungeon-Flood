@@ -19,6 +19,7 @@ int main () {
     PlayerTexture::LoadTextures();
     Fireball::LoadFireballTexture();
     GoblinTexture::LoadGoblinTextures();
+    MushroomTexture::LoadMushroomTextures();
     VerticalWall::LoadWallTexture();
     HorizontalWall::LoadWallTexture();
     WallManager::InitCornerWalls();
@@ -91,6 +92,8 @@ int main () {
     HorizontalWall::UnloadWallTexture();
     Fireball::UnloadFireballTexture();
     PlayerTexture::UnloadTextures();
+    GoblinTexture::UnloadGoblinTextures();
+    MushroomTexture::UnloadMushroomTextures();
     UnloadTexture(background);
 
     CloseAudioDevice();
