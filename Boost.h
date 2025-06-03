@@ -35,6 +35,20 @@ public:
     }
 };
 
+class MultishotEffect : public Boost {
+private:
+    float originalCooldown;
+public:
+    MultishotEffect() { duration = 10.0f; }
+    void OnStart(Player& p) {
+        p.SetMultishotMode(true);
+    }
+    void Apply(Player& p) {}
+    void OnEnd(Player& p) {
+        p.SetMultishotMode(false);
+    }
+};
+
 class BoostManager {
 public:
     static std::vector<Boost*> boosts;

@@ -35,6 +35,7 @@ private:
     int speed;
     float fireCooldown;
     int health;
+    bool multishotMode;
 public:
     int GetHealth();
     static Player& Instance();
@@ -47,6 +48,7 @@ public:
     void SetFireCooldown(float);
     float GetFireCooldown();
     void DrawPlayer();
+    void SetMultishotMode(bool m);
 };
 
 #endif

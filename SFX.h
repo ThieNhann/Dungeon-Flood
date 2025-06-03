@@ -9,6 +9,7 @@ public:
     static Sound fireball;
     static Sound goblinHurt;
     static Music bgMusic;
+    static Sound boost;
 public:
     static void LoadSFX();
     static void UnloadSFX();

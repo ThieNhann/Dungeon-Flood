@@ -37,6 +37,7 @@ Player::Player() {
     speed = PLAYER_SPEED;
     texture.LoadTextures();
     fireCooldown = 0.25;
+    multishotMode = false;
 }
 
 Player& Player::Instance() {
@@ -135,6 +136,19 @@ void Player::Update() {
     if (fire && (now - lastFireTime) >= fireCooldown) {
         Fireball fireball({hitbox.x + 15, hitbox.y + 10}, fireDirection);
         FireballManager::AddFireball(fireball);
+        if (multishotMode) {
+            if (fireDirection == RIGHT || fireDirection == LEFT) {
+                Fireball additionalFireball1({hitbox.x + 15, hitbox.y - 20}, fireDirection);
+                FireballManager::AddFireball(additionalFireball1);
+                Fireball additionalFireball2({hitbox.x + 15, hitbox.y + 40}, fireDirection);
+                FireballManager::AddFireball(additionalFireball2);
+            } else {
+                Fireball additionalFireball1({hitbox.x + 45, hitbox.y + 10}, fireDirection);
+                FireballManager::AddFireball(additionalFireball1);
+                Fireball additionalFireball2({hitbox.x - 15, hitbox.y + 10}, fireDirection);
+                FireballManager::AddFireball(additionalFireball2);
+            }
+        }
         PlaySound(SFX::fireball);
         lastFireTime = now;
     }
@@ -146,4 +160,8 @@ Direction Player::GetDirection() {
 
 void Player::SetDirection(Direction drt) {
     direction = drt;
+}
+
+void Player::SetMultishotMode(bool m) {
+    multishotMode = m;
 }

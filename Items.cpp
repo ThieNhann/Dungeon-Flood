@@ -1,24 +1,31 @@
 #include "Items.h"
 
+// --- Static/Global Variables ---
 vector<Item*> ItemManager::items;
-Texture ItemTexture::fireSpeedBoost;
 vector<Boost*> BoostManager::boosts;
+Texture ItemTexture::fireSpeedBoost;
+Texture ItemTexture::multishot;
 
+// --- ItemTexture Implementation ---
 void ItemTexture::LoadItemTexture() {
     fireSpeedBoost = LoadTexture("resources/images/fireSpeedBoost.png");
+    multishot = LoadTexture("resources/images/multishot.png");
 }
 
 void ItemTexture::UnloadItemTexture() {
     UnloadTexture(fireSpeedBoost);
+    UnloadTexture(multishot);
 }
 
 Texture ItemTexture::GetTexture(ItemType t) {
     switch (t) {
         case FIRESPEEDBOOST: return fireSpeedBoost;
+        case MULTISHOT: return multishot;
         default: return fireSpeedBoost;
     }
 }
- 
+
+// --- Item Implementation ---
 Rectangle Item::GetHitbox() {
     return hitbox;
 }
@@ -36,6 +43,22 @@ void Item::Affect(Player& p) {
     BoostManager::AddBoost(GetBoost(), p);
 }
 
+bool Item::ShouldDespawn() const {
+    return (GetTime() - spawnTime) >= 7.5f;
+}
+
+// --- Multishot Implementation ---
+Multishot::Multishot(Vector2 pos) {
+    texture = ItemTexture::GetTexture(MULTISHOT);
+    hitbox.x = pos.x;
+    hitbox.y = pos.y;
+    hitbox.height = 32;
+    hitbox.width = 32;
+    effect = new MultishotEffect();
+    spawnTime = GetTime();
+}
+
+// --- FireSpeedBoost Implementation ---
 FireSpeedBoost::FireSpeedBoost(Vector2 pos) {
     texture = ItemTexture::GetTexture(FIRESPEEDBOOST);
     hitbox.x = pos.x;
@@ -46,15 +69,10 @@ FireSpeedBoost::FireSpeedBoost(Vector2 pos) {
     spawnTime = GetTime();
 }
 
-bool Item::ShouldDespawn() const {
-    return (GetTime() - spawnTime) >= 5.0f;
-}
-
+// --- ItemManager Implementation ---
 vector<Item*>& ItemManager::GetItems() {
     return items;
 }
-
-
 
 void ItemManager::AddItem(Item* i) {
     items.push_back(i);
@@ -71,6 +89,7 @@ void ItemManager::Update() {
     for (auto it = items.begin(); it != items.end(); ) {
         if (CheckCollisionRecs(p.GetHitbox(), (*it)->GetHitbox())) {
             (*it)->Affect(p);
+            PlaySound(SFX::boost);
             delete *it;
             it = items.erase(it);
         } else if ((*it)->ShouldDespawn()) {
@@ -86,14 +105,16 @@ void ItemManager::Destruct() {
     for (auto& i : items) {
         delete i;
     }
+    items.clear();
 }
 
+// --- Item Spawning Function ---
 void ItemSpawn() {
-    static std::vector<ItemType> types = { FIRESPEEDBOOST };
+    static std::vector<ItemType> types = { FIRESPEEDBOOST, MULTISHOT };
     static float lastSpawnTime = 0.0f;
     float now = GetTime();
 
-    if (now - lastSpawnTime >= 15.0f) {
+    if (now - lastSpawnTime >= (float)GetRandomValue(10, 20)) {
         int typeIdx = GetRandomValue(0, types.size() - 1);
         ItemType type = types[typeIdx];
         float x = GetRandomValue(50, SCREEN_WIDTH - 75);
@@ -104,6 +125,9 @@ void ItemSpawn() {
         switch (type) {
             case FIRESPEEDBOOST:
                 item = new FireSpeedBoost({x, y});
+                break;
+            case MULTISHOT:
+                item = new Multishot({x, y});
                 break;
         }
         
