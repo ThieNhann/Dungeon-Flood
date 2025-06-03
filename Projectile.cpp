@@ -6,12 +6,12 @@ vector<Fireball> FireballManager::fireballs;
 Fireball::Fireball(Vector2 pos, Direction d)  : direction(d) {
     speed = 300;
     if (d == LEFT || d == RIGHT) {
-        hitbox.height = 7;
-        hitbox.width = 13;
+        hitbox.height = 20;
+        hitbox.width = 32;
     }
     else { 
-        hitbox.height = 13;
-        hitbox.width = 7;
+        hitbox.height = 32;
+        hitbox.width = 20;
     }
     damage = 1;
     hitbox.x = pos.x;
@@ -35,7 +35,23 @@ void Fireball::Draw() {
         case LEFT: rotation = 180.0f; break;
         default: break;
     }
-    Vector2 texturePos = { hitbox.x + hitbox.width / 2.0f, hitbox.y + hitbox.height / 2.0f };
+    Vector2 texturePos = {hitbox.x, hitbox.y};
+    switch (direction) {
+        case RIGHT:
+            break;
+        case UP:
+            texturePos.y += hitbox.height;
+            break;
+        case DOWN:
+            texturePos.x += hitbox.width;
+            break;
+        case LEFT:
+            texturePos.y += hitbox.height;
+            texturePos.x += hitbox.width;
+            break;
+        default:
+            break;
+    }
     DrawTextureEx(texture, texturePos, rotation, 1.0f, WHITE);
     DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{0, 255, 0, 100});
 }
@@ -81,7 +97,7 @@ void FireballManager::RemoveOutOfBoundFireballs() {
 
 void FireballManager::AddFireball(Fireball& f) {
     fireballs.push_back(f);
-}
+} 
 
 vector<Fireball>& FireballManager::GetFireballs() {
     return fireballs;

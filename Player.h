@@ -7,6 +7,7 @@
 #include "Enemy.h"
 #include "Wall.h"
 #include "SFX.h"
+#include "Utils.h"
 
 class PlayerTexture {
 private:
@@ -14,6 +15,8 @@ private:
     static Texture down;
     static Texture left;
     static Texture right;
+public:
+    static Texture heart;
 public:
     static void LoadTextures();
     static void UnloadTextures();

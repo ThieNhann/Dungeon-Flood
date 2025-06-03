@@ -64,7 +64,7 @@ int main () {
             EnemyManager::Draw();
             WallManager::Draw();
             for (int i = 0; i < Player::Instance().GetHealth(); i++) {
-                DrawRectangle(60, 60 + i * 50, 20, 20, RED);
+                DrawTexture(PlayerTexture::heart, 60 + i * 40, 60, WHITE);
             }
 
         EndDrawing();

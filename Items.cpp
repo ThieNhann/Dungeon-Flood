@@ -63,8 +63,8 @@ FireSpeedBoost::FireSpeedBoost(Vector2 pos) {
     texture = ItemTexture::GetTexture(FIRESPEEDBOOST);
     hitbox.x = pos.x;
     hitbox.y = pos.y;
-    hitbox.height = 25;
-    hitbox.width = 25;
+    hitbox.height = 32;
+    hitbox.width = 32;
     effect = new FireSpeedBoostEffect();
     spawnTime = GetTime();
 }

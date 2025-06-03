@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "Player.h"
+#include <typeinfo>
 
 class Boost {
 protected:

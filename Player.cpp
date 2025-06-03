@@ -4,12 +4,14 @@ Texture PlayerTexture::up;
 Texture PlayerTexture::down;
 Texture PlayerTexture::left;
 Texture PlayerTexture::right;
+Texture PlayerTexture::heart;
 
 void PlayerTexture::LoadTextures()  {
     up = LoadTexture("resources/images/playerUp.png");
     down = LoadTexture("resources/images/playerDown.png");
     left = LoadTexture("resources/images/playerLeft.png");
     right = LoadTexture("resources/images/playerRight.png");
+    heart = LoadTexture("resources/images/heart.png");
 }
 
 void PlayerTexture::UnloadTextures() {
@@ -118,19 +120,19 @@ void Player::Update() {
     bool fire = false;
     if (IsKeyPressed(KEY_RIGHT)) {
         fireDirection = RIGHT;
-        direction = RIGHT;
+        if (!IsWASDPressed()) direction = RIGHT;
         fire = true;
     } else if (IsKeyPressed(KEY_LEFT)) {
         fireDirection = LEFT;
-        direction = LEFT;
+        if (!IsWASDPressed()) direction = LEFT;
         fire = true;
     } else if (IsKeyPressed(KEY_UP)) {
         fireDirection = UP;
-        direction = UP;
+        if (!IsWASDPressed()) direction = UP;
         fire = true;
     } else if (IsKeyPressed(KEY_DOWN)) {
         fireDirection = DOWN;
-        direction = DOWN;
+        if (!IsWASDPressed()) direction = DOWN;
         fire = true;
     }
     if (fire && (now - lastFireTime) >= fireCooldown) {

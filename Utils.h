@@ -3,4 +3,6 @@
 
 #include <raylib.h>
 
+bool IsWASDPressed();
+
 #endif
