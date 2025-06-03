@@ -52,7 +52,6 @@ Rectangle Player::GetHitbox() {
 }
 void Player::DrawPlayer() {
     DrawTextureV(texture.GetTexture(direction), {hitbox.x, hitbox.y}, WHITE);
-    DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{0, 0, 255, 100});
 }
 
 void Player::SetPosition(Vector2 pos) {

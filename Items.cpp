@@ -32,7 +32,6 @@ Rectangle Item::GetHitbox() {
 
 void Item::Draw() {
     DrawTexture(texture, hitbox.x, hitbox.y, WHITE);
-    DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{255, 255, 0, 100});
 }
 
 Boost* Item::GetBoost() {

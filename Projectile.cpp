@@ -53,7 +53,6 @@ void Fireball::Draw() {
             break;
     }
     DrawTextureEx(texture, texturePos, rotation, 1.0f, WHITE);
-    DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{0, 255, 0, 100});
 }
 
 void Fireball::Update() {

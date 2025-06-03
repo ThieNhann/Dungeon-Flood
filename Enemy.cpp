@@ -35,7 +35,6 @@ Texture GoblinTexture::GetCurrentTexture(Direction d) {
 void Goblin::Draw() {
     if (health > 0) {
         DrawTexture(texture.GetCurrentTexture(facing), hitbox.x, hitbox.y, WHITE);
-        DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{255, 0, 255, 100});
     }
 }
 

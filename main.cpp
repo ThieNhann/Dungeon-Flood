@@ -4,6 +4,7 @@
 #include "Wall.h"
 #include "SFX.h"
 #include "Items.h"
+#include <iostream>
 using namespace std;
 
 int main () { 
@@ -28,7 +29,7 @@ int main () {
 
     PlayMusicStream(SFX::bgMusic);
     while (WindowShouldClose() == false){
-
+        cout << "cc\n";
         UpdateMusicStream(SFX::bgMusic);
         Player::Instance().Update();
         BoostManager::Update(Player::Instance());   
@@ -56,17 +57,16 @@ int main () {
         BeginDrawing();
 
             ClearBackground(BLACK);
-        
+
             DrawTexture(background, 0, 0, WHITE);
             Player::Instance().DrawPlayer();
             ItemManager::Draw();
             FireballManager::Draw();
             EnemyManager::Draw();
             WallManager::Draw();
-            for (int i = 0; i < Player::Instance().GetHealth(); i++) {
+            for (int i = 0; i < Player::Instance().GetHealth(); ++i) {
                 DrawTexture(PlayerTexture::heart, 60 + i * 40, 60, WHITE);
             }
-
         EndDrawing();
     }
 

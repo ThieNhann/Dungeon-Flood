@@ -13,7 +13,6 @@ VerticalWall::VerticalWall(Vector2 pos) {
 
 void VerticalWall::Draw() {
     DrawTexture(texture, hitbox.x, hitbox.y, WHITE);
-    DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{255, 0, 0, 100});
 }
 
 void VerticalWall::LoadWallTexture() {
@@ -34,7 +33,6 @@ HorizontalWall::HorizontalWall(Vector2 pos) {
 
 void HorizontalWall::Draw() {
     DrawTexture(texture, hitbox.x, hitbox.y, WHITE);
-    DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{255, 0, 0, 100});
 }
 
 void HorizontalWall::LoadWallTexture() {
