@@ -30,13 +30,15 @@ int main () {
 
     PlayMusicStream(SFX::bgMusic);
     while (WindowShouldClose() == false){
+        if (Player::Instance().GetHealth() > 0) {
+            Player::Instance().Update();
+            BoostManager::Update(Player::Instance());   
+            FireballManager::RemoveOutOfBoundFireballs();
+            EnemyManager::Update();
+            ItemManager::Update();
+        }
         UpdateMusicStream(SFX::bgMusic);
-        Player::Instance().Update();
-        BoostManager::Update(Player::Instance());   
-        FireballManager::RemoveOutOfBoundFireballs();
-        EnemyManager::Update();
-        ItemManager::Update();
-       
+        
         ItemSpawn();
 
         auto& fireballs = FireballManager::GetFireballs();
