@@ -10,6 +10,7 @@ public:
     static Sound goblinHurt;
     static Music bgMusic;
     static Sound boost;
+    static Sound hurt;
 public:
     static void LoadSFX();
     static void UnloadSFX();

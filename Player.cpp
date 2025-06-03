@@ -4,14 +4,12 @@ Texture PlayerTexture::up;
 Texture PlayerTexture::down;
 Texture PlayerTexture::left;
 Texture PlayerTexture::right;
-Texture PlayerTexture::heart;
 
 void PlayerTexture::LoadTextures()  {
     up = LoadTexture("resources/images/playerUp.png");
     down = LoadTexture("resources/images/playerDown.png");
     left = LoadTexture("resources/images/playerLeft.png");
     right = LoadTexture("resources/images/playerRight.png");
-    heart = LoadTexture("resources/images/heart.png");
 }
 
 void PlayerTexture::UnloadTextures() {
@@ -40,6 +38,7 @@ Player::Player() {
     texture.LoadTextures();
     fireCooldown = 0.25;
     multishotMode = false;
+    invincibleMode = false;
 }
 
 Player& Player::Instance() {
@@ -52,6 +51,10 @@ Rectangle Player::GetHitbox() {
 }
 void Player::DrawPlayer() {
     DrawTextureV(texture.GetTexture(direction), {hitbox.x, hitbox.y}, WHITE);
+    if (invincibleMode) 
+    {
+        DrawTexture(IconTexture::heartProtection, hitbox.x + 30, hitbox.y - 20, WHITE);
+    }
 }
 
 void Player::SetPosition(Vector2 pos) {
@@ -90,12 +93,26 @@ void Player::Update() {
 
     bool collision = false;
 
+    static float lastHealthLossTime = -3.0f;
+    float currentTime = GetTime();
+
+
+    bool collidedWithEnemy = false;
     for (auto& en : EnemyManager::GetEnemies()) {
-        if (!en ->isDead() && CheckCollisionRecs(newHitbox, en->GetHitbox())) {
-            if (health > 0) health--;
+        if (!en->isDead() && CheckCollisionRecs(newHitbox, en->GetHitbox())) {
+            collidedWithEnemy = true;
+            if ((currentTime - lastHealthLossTime) >= 3.0f) {
+                if (health > 0) health--;
+                PlaySound(SFX::hurt);
+                lastHealthLossTime = currentTime;
+                invincibleMode = true;
+            }
             collision = true;
             break;
         }
+    }
+    if (!collidedWithEnemy && (currentTime - lastHealthLossTime) >= 3.0f) {
+        invincibleMode = false;
     }
 
     for (auto& w : WallManager::GetWalls()) {

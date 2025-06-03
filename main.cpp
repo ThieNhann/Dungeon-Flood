@@ -4,7 +4,7 @@
 #include "Wall.h"
 #include "SFX.h"
 #include "Items.h"
-#include <iostream>
+#include "Icon.h"
 using namespace std;
 
 int main () { 
@@ -24,12 +24,12 @@ int main () {
     WallManager::InitCornerWalls();
     SFX::LoadSFX();
     ItemTexture::LoadItemTexture();
+    IconTexture::LoadIconTexture();
 
     Texture2D background = LoadTexture("resources/images/background.png");
 
     PlayMusicStream(SFX::bgMusic);
     while (WindowShouldClose() == false){
-        cout << "cc\n";
         UpdateMusicStream(SFX::bgMusic);
         Player::Instance().Update();
         BoostManager::Update(Player::Instance());   
@@ -65,22 +65,32 @@ int main () {
             EnemyManager::Draw();
             WallManager::Draw();
             for (int i = 0; i < Player::Instance().GetHealth(); ++i) {
-                DrawTexture(PlayerTexture::heart, 60 + i * 40, 60, WHITE);
+                DrawTexture(IconTexture::heart, 60 + i * 40, 60, WHITE);
             }
+            
         EndDrawing();
     }
 
 
     StopMusicStream(SFX::bgMusic);
+    
+    // Cleanup managers first
+    ItemManager::Destruct();
+    EnemyManager::Destruct(); 
+    FireballManager::Destruct(); // Add this
+    BoostManager::Destruct();
+    WallManager::Destruct();
+
+    // Then unload resources
+    IconTexture::UnloadIconTexture();
     ItemTexture::UnloadItemTexture();
     SFX::UnloadSFX();
     VerticalWall::UnloadWallTexture();
     HorizontalWall::UnloadWallTexture();
-    EnemyManager::Destruct();
-    PlayerTexture::UnloadTextures();
     Fireball::UnloadFireballTexture();
-    WallManager::Destruct();
-    BoostManager::Destruct();
+    PlayerTexture::UnloadTextures();
+    UnloadTexture(background);
+
     CloseAudioDevice();
     CloseWindow();
 }

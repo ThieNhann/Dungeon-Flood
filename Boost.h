@@ -75,6 +75,7 @@ public:
         for (auto& b : boosts) {
             delete b;
         }
+        boosts.clear();
     }
 };
 

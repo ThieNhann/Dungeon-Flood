@@ -8,6 +8,7 @@
 #include "Wall.h"
 #include "SFX.h"
 #include "Utils.h"
+#include "Icon.h"
 
 class PlayerTexture {
 private:
@@ -15,8 +16,6 @@ private:
     static Texture down;
     static Texture left;
     static Texture right;
-public:
-    static Texture heart;
 public:
     static void LoadTextures();
     static void UnloadTextures();
@@ -39,6 +38,7 @@ private:
     float fireCooldown;
     int health;
     bool multishotMode;
+    bool invincibleMode;
 public:
     int GetHealth();
     static Player& Instance();
