@@ -47,15 +47,23 @@ int main () {
             bool hit = false;
             for (auto& e : EnemyManager::GetEnemies()) {
                 if (CheckCollisionRecs(it->GetHitbox(), e->GetHitbox())) {
-                    e->TakeDamage(it->GetDamage());
-                    PlaySound(SFX::goblinHurt);
-                    it = fireballs.erase(it);
-                    hit = true;
-                    break;
+                    if (Player::Instance().GetPiercingMode()) {
+                        if (it->enemiesHit.count(e) == 0) {
+                            e->TakeDamage(it->GetDamage());
+                            PlaySound(SFX::goblinHurt);
+                            it->enemiesHit.insert(e);
+                        }
+                    } else {
+                        e->TakeDamage(it->GetDamage());
+                        PlaySound(SFX::goblinHurt);
+                        it = fireballs.erase(it);
+                        hit = true;
+                        break;
+                    }
                 }
-            }
-            if (!hit) ++it;
-        }
+    }
+    if (!hit) ++it;
+}
 
         BeginDrawing();
 

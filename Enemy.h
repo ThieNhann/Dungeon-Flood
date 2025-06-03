@@ -6,6 +6,8 @@
 #include "Config.h"
 #include <cmath>
 #include "Wall.h"
+#include <vector>
+using namespace std;
 
 class GoblinTexture {
 private:
@@ -50,13 +52,13 @@ public:
 
 class EnemyManager {
 private:
-    static vector<Enemy*> enemies;
+    static std::vector<Enemy*> enemies;
     static int goblinWaves;
     static int mushroomWaves;
     static const int MAX_GOBLIN_WAVES = 7;
     static const int MAX_MUSHROOM_WAVES = 5;
 public:
-    static vector<Enemy*>& GetEnemies();
+    static std::vector<Enemy*>& GetEnemies();
     static void AddEnemy(Enemy* en);
     static void Draw();
     static void Update();

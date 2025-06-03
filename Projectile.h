@@ -6,8 +6,10 @@
 #include <algorithm>
 #include "Wall.h"
 #include "Config.h"
+#include <set>
+#include "Enemy.h"
 
-using namespace std;
+class Enemy;
 
 class Fireball {
 private:
@@ -16,6 +18,8 @@ private:
     Direction direction;
     float speed;
     int damage;
+public:
+    std::set<Enemy*> enemiesHit;
 public:
     Fireball(Vector2 pos, Direction d); 
     bool IsOutOfScreen() const;
@@ -29,9 +33,9 @@ public:
 
 class FireballManager {
 private:
-    static vector<Fireball> fireballs;
+    static std::vector<Fireball> fireballs;
 public:
-    static vector<Fireball>& GetFireballs();
+    static std::vector<Fireball>& GetFireballs();
     static void AddFireball(Fireball& f);
     static void Draw();
     static void RemoveOutOfBoundFireballs();

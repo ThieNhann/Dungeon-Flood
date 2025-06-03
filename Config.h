@@ -77,6 +77,7 @@ const float MULTISHOT_OFFSET_Y3 = 10.0f;
 const float ENEMY_SPAWN_INTERVAL = 5.0f;
 const float ENEMY_SPAWN_WIDTH = 45.0f;
 const float ENEMY_SPAWN_HEIGHT = 45.0f;
-const int ENEMY_SPAWN_WAVE_MAX = 7;
+const int MAX_GOBLIN_WAVE = 5;
+const int MAX_MUSHROOM_WAVE = 3;
 
 #endif

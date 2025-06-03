@@ -378,7 +378,7 @@ void EnemyManager::Update() {
             {1460, 425},
             {720, 910}
         };
-        if (goblinWaves < /*MAX_GOBLIN_WAVES*/0) {
+        if (goblinWaves < MAX_GOBLIN_WAVES) {
             for (auto pos : spawnPositions) {
                 for (int i = 0; i < goblinWaves + 1; i++) {
                     float offsetX = (i % 3) * ENEMY_SPAWN_WIDTH;

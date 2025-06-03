@@ -7,12 +7,13 @@
 #include "Boost.h"
 #include "SFX.h"
 
-enum ItemType { FIRESPEEDBOOST, MULTISHOT };
+enum ItemType { FIRESPEEDBOOST, MULTISHOT, PIERCING };
 
 class ItemTexture {
 public:
     static Texture fireSpeedBoost;
     static Texture multishot;
+    static Texture piercing;
 public:
     static void LoadItemTexture();
     static void UnloadItemTexture();
@@ -42,6 +43,11 @@ public:
 class FireSpeedBoost : public Item {
 public:
     FireSpeedBoost(Vector2 pos);
+};
+
+class Piercing : public Item {
+public:
+    Piercing(Vector2 pos);
 };
 
 class ItemManager {

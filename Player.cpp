@@ -39,6 +39,7 @@ Player::Player() {
     fireCooldown = PLAYER_FIRE_COOLDOWN;
     multishotMode = false;
     invincibleMode = false;
+    piercingMode = false;
 }
 
 Player& Player::Instance() {
@@ -182,4 +183,12 @@ void Player::SetDirection(Direction drt) {
 
 void Player::SetMultishotMode(bool m) {
     multishotMode = m;
+}
+
+void Player::SetPiercingMode(bool m) {
+    piercingMode = m;
+}
+
+bool Player::GetPiercingMode() {
+    return piercingMode;
 }

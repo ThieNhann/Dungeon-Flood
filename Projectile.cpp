@@ -1,5 +1,6 @@
 #include "Projectile.h"
-#include <iostream>
+#include "Player.h"
+
 Texture Fireball::texture;
 vector<Fireball> FireballManager::fireballs;
 

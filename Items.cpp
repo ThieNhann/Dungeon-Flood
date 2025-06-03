@@ -5,22 +5,26 @@ vector<Item*> ItemManager::items;
 vector<Boost*> BoostManager::boosts;
 Texture ItemTexture::fireSpeedBoost;
 Texture ItemTexture::multishot;
+Texture ItemTexture::piercing;
 
 // --- ItemTexture Implementation ---
 void ItemTexture::LoadItemTexture() {
     fireSpeedBoost = LoadTexture("resources/images/fireSpeedBoost.png");
     multishot = LoadTexture("resources/images/multishot.png");
+    piercing = LoadTexture("resources/images/piercing.png");
 }
 
 void ItemTexture::UnloadItemTexture() {
     UnloadTexture(fireSpeedBoost);
     UnloadTexture(multishot);
+    UnloadTexture(piercing);
 }
 
 Texture ItemTexture::GetTexture(ItemType t) {
     switch (t) {
         case FIRESPEEDBOOST: return fireSpeedBoost;
         case MULTISHOT: return multishot;
+        case PIERCING: return piercing;
         default: return fireSpeedBoost;
     }
 }
@@ -68,6 +72,17 @@ FireSpeedBoost::FireSpeedBoost(Vector2 pos) {
     spawnTime = GetTime();
 }
 
+// --- Piercing Implementation ---
+Piercing::Piercing(Vector2 pos) {
+    texture = ItemTexture::GetTexture(PIERCING);
+    hitbox.x = pos.x;
+    hitbox.y = pos.y;
+    hitbox.height = ITEM_HEIGHT;
+    hitbox.width = ITEM_WIDTH;
+    effect = new PiercingEffect();
+    spawnTime = GetTime();
+}
+
 // --- ItemManager Implementation ---
 vector<Item*>& ItemManager::GetItems() {
     return items;
@@ -109,7 +124,7 @@ void ItemManager::Destruct() {
 
 // --- Item Spawning Function ---
 void ItemSpawn() {
-    static std::vector<ItemType> types = { FIRESPEEDBOOST, MULTISHOT };
+    static std::vector<ItemType> types = { FIRESPEEDBOOST, MULTISHOT, PIERCING };
     static float lastSpawnTime = 0.0f;
     float now = GetTime();
 
@@ -127,6 +142,9 @@ void ItemSpawn() {
                 break;
             case MULTISHOT:
                 item = new Multishot({x, y});
+                break;
+            case PIERCING:
+                item = new Piercing({x, y});
                 break;
         }
         

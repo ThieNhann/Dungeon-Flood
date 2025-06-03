@@ -51,6 +51,20 @@ public:
     }
 };
 
+class PiercingEffect : public Boost {
+private:
+    float originalCooldown;
+public:
+    PiercingEffect() { duration = BOOST_DURATION; }
+    void OnStart(Player& p) {
+        p.SetPiercingMode(true);
+    }
+    void Apply(Player& p) {}
+    void OnEnd(Player& p) {
+        p.SetPiercingMode(false);
+    }
+};
+
 class BoostManager {
 public:
     static std::vector<Boost*> boosts;

@@ -39,6 +39,7 @@ private:
     int health;
     bool multishotMode;
     bool invincibleMode;
+    bool piercingMode;
 public:
     int GetHealth();
     static Player& Instance();
@@ -52,6 +53,8 @@ public:
     float GetFireCooldown();
     void DrawPlayer();
     void SetMultishotMode(bool m);
+    void SetPiercingMode(bool m);
+    bool GetPiercingMode();
 };
 
 #endif
