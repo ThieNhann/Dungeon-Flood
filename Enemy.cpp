@@ -227,24 +227,69 @@ void Mushroom::Update() {
     Player& p = Player::Instance();
     Vector2 playerPos = { p.GetHitbox().x, p.GetHitbox().y };
     Vector2 myPos = {hitbox.x, hitbox.y};
+
     Vector2 toPlayer = {playerPos.x - myPos.x, playerPos.y - myPos.y};
     float distToPlayer = sqrt(toPlayer.x * toPlayer.x + toPlayer.y * toPlayer.y);
+
     if (distToPlayer != 0) {
         toPlayer.x /= distToPlayer;
         toPlayer.y /= distToPlayer;
     }
-    if (fabs(toPlayer.x) > fabs(toPlayer.y)) {
-        facing = (toPlayer.x > 0) ? RIGHT : LEFT;
-    } else {
-        facing = (toPlayer.y > 0) ? DOWN : UP;
+
+    Vector2 separation = {0, 0};
+    const float SEPARATION_RADIUS = GOBLIN_SEPARATION_RADIUS;
+    int neighborCount = 0;
+
+    for (auto& other : EnemyManager::GetEnemies()) {
+        if (other != this) {
+            Vector2 otherPos = {other->GetHitbox().x, other->GetHitbox().y};
+            Vector2 diff = {myPos.x - otherPos.x, myPos.y - otherPos.y};
+            float dist = sqrt(diff.x * diff.x + diff.y * diff.y);
+
+            if (dist < SEPARATION_RADIUS && dist > 0) {
+                separation.x += diff.x / dist;
+                separation.y += diff.y / dist;
+                neighborCount++;
+            }
+        }
     }
+
+    if (neighborCount > 0) {
+        float sepMag = sqrt(separation.x * separation.x + separation.y * separation.y);
+        if (sepMag > 0) {
+            separation.x /= sepMag;
+            separation.y /= sepMag;
+        }
+    }
+
+    const float CHASE_WEIGHT = GOBLIN_CHASE_WEIGHT;
+    const float SEPARATION_WEIGHT = GOBLIN_SEPARATION_WEIGHT;
+
+    Vector2 direction = {
+        toPlayer.x * CHASE_WEIGHT + separation.x * SEPARATION_WEIGHT,
+        toPlayer.y * CHASE_WEIGHT + separation.y * SEPARATION_WEIGHT
+    };
+
+    float dirLength = sqrt(direction.x * direction.x + direction.y * direction.y);
+    if (dirLength > 0) {
+        direction.x /= dirLength;
+        direction.y /= dirLength;
+    }
+
+    if (fabs(direction.x) > fabs(direction.y)) {
+        facing = (direction.x > 0) ? RIGHT : LEFT;
+    } else {
+        facing = (direction.y > 0) ? DOWN : UP;
+    }
+
     float t = GetFrameTime();
-    Vector2 newPos = {hitbox.x + toPlayer.x * speed * t, hitbox.y + toPlayer.y * speed * t};
+    Vector2 newPos = {hitbox.x + direction.x * speed * t, hitbox.y + direction.y * speed * t};
     Rectangle newHitbox = hitbox;
     newHitbox.x = newPos.x;
     newHitbox.y = newPos.y;
 
     bool collision = false;
+
     for (auto& other : EnemyManager::GetEnemies()) {
         if (other != this && CheckCollisionRecs(newHitbox, other->GetHitbox())) {
             collision = true;
@@ -260,9 +305,50 @@ void Mushroom::Update() {
     if (CheckCollisionRecs(newHitbox, Player::Instance().GetHitbox())) {
         collision = true;
     }
+
     if (!collision) {
         hitbox.x = newPos.x;
         hitbox.y = newPos.y;
+    } else {
+        Rectangle tryX = hitbox;
+        tryX.x = hitbox.x + direction.x * speed * t;
+        bool colX = false;
+
+        for (auto& other : EnemyManager::GetEnemies()) {
+            if (other != this && CheckCollisionRecs(tryX, other->GetHitbox())) {
+                colX = true;
+                break;
+            }
+        }
+        for (auto& w : WallManager::GetWalls()) {
+            if (CheckCollisionRecs(tryX, w->GetHitbox())) {
+                colX = true;
+                break;
+            }
+        }
+        if (!colX && !CheckCollisionRecs(tryX, Player::Instance().GetHitbox())) {
+            hitbox.x = tryX.x;
+        }
+
+        Rectangle tryY = hitbox;
+        tryY.y = hitbox.y + direction.y * speed * t;
+        bool colY = false;
+
+        for (auto& other : EnemyManager::GetEnemies()) {
+            if (other != this && CheckCollisionRecs(tryY, other->GetHitbox())) {
+                colY = true;
+                break;
+            }
+        }
+        for (auto& w : WallManager::GetWalls()) {
+            if (CheckCollisionRecs(tryY, w->GetHitbox())) {
+                colY = true;
+                break;
+            }
+        }
+        if (!colY && !CheckCollisionRecs(tryY, Player::Instance().GetHitbox())) {
+            hitbox.y = tryY.y;
+        }
     }
 }
 
