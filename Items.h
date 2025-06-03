@@ -22,12 +22,14 @@ protected:
     Rectangle hitbox;
     Texture texture;
     Boost* effect;
+    float spawnTime;
 public:
     virtual ~Item() {}
     Boost* GetBoost();
     void Affect(Player& p);
     Rectangle GetHitbox();
     void Draw();
+    bool ShouldDespawn() const;
 };
 
 class FireSpeedBoost : public Item {

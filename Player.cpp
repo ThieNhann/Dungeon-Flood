@@ -28,6 +28,7 @@ float Player::GetFireCooldown() {
 }
 
 Player::Player() {
+    health = 3;
     direction = DOWN;
     hitbox.width = 40;
     hitbox.height = 40;
@@ -48,11 +49,16 @@ Rectangle Player::GetHitbox() {
 }
 void Player::DrawPlayer() {
     DrawTextureV(texture.GetTexture(direction), {hitbox.x, hitbox.y}, WHITE);
+    DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{0, 0, 255, 100});
 }
 
 void Player::SetPosition(Vector2 pos) {
     hitbox.x = pos.x;
     hitbox.y = pos.y;
+}
+
+int Player::GetHealth() {
+    return health;
 }
 
 void Player::Update() {
@@ -84,6 +90,7 @@ void Player::Update() {
 
     for (auto& en : EnemyManager::GetEnemies()) {
         if (!en ->isDead() && CheckCollisionRecs(newHitbox, en->GetHitbox())) {
+            if (health > 0) health--;
             collision = true;
             break;
         }
@@ -96,6 +103,8 @@ void Player::Update() {
         }
     }
     
+    if (newHitbox.x >= 1440 || newHitbox.x <= 0 || newHitbox.y <= 0 || newHitbox.y >= 900) collision = true;
+
     if (!collision) {
         hitbox.x = newHitbox.x;
         hitbox.y = newHitbox.y;

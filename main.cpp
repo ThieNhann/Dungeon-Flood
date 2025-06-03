@@ -56,12 +56,16 @@ int main () {
         BeginDrawing();
 
             ClearBackground(BLACK);
+        
             DrawTexture(background, 0, 0, WHITE);
             Player::Instance().DrawPlayer();
             ItemManager::Draw();
             FireballManager::Draw();
             EnemyManager::Draw();
             WallManager::Draw();
+            for (int i = 0; i < Player::Instance().GetHealth(); i++) {
+                DrawRectangle(60, 60 + i * 50, 20, 20, RED);
+            }
 
         EndDrawing();
     }

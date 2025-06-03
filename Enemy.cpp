@@ -35,18 +35,63 @@ Texture GoblinTexture::GetCurrentTexture(Direction d) {
 void Goblin::Draw() {
     if (health > 0) {
         DrawTexture(texture.GetCurrentTexture(facing), hitbox.x, hitbox.y, WHITE);
+        DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{255, 0, 255, 100});
     }
 }
+
+
 
 void Goblin::Update() {
     Player p = Player::Instance();
     Vector2 playerPos = { p.GetHitbox().x, p.GetHitbox().y };
     Vector2 goblinPos = {hitbox.x, hitbox.y};
-    Vector2 direction = {playerPos.x - goblinPos.x, playerPos.y - goblinPos.y};
-    float distance = sqrt(direction.x * direction.x + direction.y * direction.y);
-    if (distance != 0) {
-        direction.x /= distance;
-        direction.y /= distance;
+
+    Vector2 toPlayer = {playerPos.x - goblinPos.x, playerPos.y - goblinPos.y};
+    float distToPlayer = sqrt(toPlayer.x * toPlayer.x + toPlayer.y * toPlayer.y);
+    
+    if (distToPlayer != 0) {
+        toPlayer.x /= distToPlayer;
+        toPlayer.y /= distToPlayer;
+    }
+
+    Vector2 separation = {0, 0};
+    const float SEPARATION_RADIUS = 10.0f;
+    int neighborCount = 0;
+
+    for (auto& other : EnemyManager::GetEnemies()) {
+        if (other != this) {
+            Vector2 otherPos = {other->GetHitbox().x, other->GetHitbox().y};
+            Vector2 diff = {goblinPos.x - otherPos.x, goblinPos.y - otherPos.y};
+            float dist = sqrt(diff.x * diff.x + diff.y * diff.y);
+            
+            if (dist < SEPARATION_RADIUS && dist > 0) {
+                separation.x += diff.x / dist;
+                separation.y += diff.y / dist;
+                neighborCount++;
+            }
+        }
+    }
+
+    if (neighborCount > 0) {
+        float sepMag = sqrt(separation.x * separation.x + separation.y * separation.y);
+        if (sepMag > 0) {
+            separation.x /= sepMag;
+            separation.y /= sepMag;
+        }
+    }
+
+    const float CHASE_WEIGHT = 1.0f;
+    const float SEPARATION_WEIGHT = 1.2f;
+    
+    Vector2 direction = {
+        toPlayer.x * CHASE_WEIGHT + separation.x * SEPARATION_WEIGHT,
+        toPlayer.y * CHASE_WEIGHT + separation.y * SEPARATION_WEIGHT
+    };
+
+    float dirLength = sqrt(direction.x * direction.x + direction.y * direction.y);
+    if (dirLength > 0) {
+        direction.x /= dirLength;
+        direction.y /= dirLength;
     }
 
     if (fabs(direction.x) > fabs(direction.y)) {
@@ -62,6 +107,7 @@ void Goblin::Update() {
     newHitbox.y = newPos.y;
 
     bool collision = false;
+    
     for (auto& other : EnemyManager::GetEnemies()) {
         if (other != this && CheckCollisionRecs(newHitbox, other->GetHitbox())) {
             collision = true;
@@ -87,29 +133,41 @@ void Goblin::Update() {
         Rectangle tryX = hitbox;
         tryX.x = hitbox.x + direction.x * speed * t;
         bool colX = false;
+        
         for (auto& other : EnemyManager::GetEnemies()) {
             if (other != this && CheckCollisionRecs(tryX, other->GetHitbox())) {
                 colX = true;
                 break;
             }
         }
+        for (auto& w : WallManager::GetWalls()) {
+            if (CheckCollisionRecs(tryX, w->GetHitbox())) {
+                colX = true;
+                break;
+            }
+        }
         if (!colX && !CheckCollisionRecs(tryX, Player::Instance().GetHitbox())) {
             hitbox.x = tryX.x;
-            return;
         }
 
         Rectangle tryY = hitbox;
         tryY.y = hitbox.y + direction.y * speed * t;
         bool colY = false;
+        
         for (auto& other : EnemyManager::GetEnemies()) {
             if (other != this && CheckCollisionRecs(tryY, other->GetHitbox())) {
                 colY = true;
                 break;
             }
         }
+        for (auto& w : WallManager::GetWalls()) {
+            if (CheckCollisionRecs(tryY, w->GetHitbox())) {
+                colY = true;
+                break;
+            }
+        }
         if (!colY && !CheckCollisionRecs(tryY, Player::Instance().GetHitbox())) {
             hitbox.y = tryY.y;
-            return;
         }
     }
 }
@@ -152,21 +210,40 @@ void EnemyManager::Update() {
     static int waveCounter = 1;
     float now = GetTime();
     if ((now - lastWaveSpawnTime) >= 5.0f) {
+        // Điều chỉnh vị trí spawn để nằm ngoài vùng tường
         Vector2 spawnPositions[4] = {
-            {720, -50},   // Top gate
-            {-50, 425},   // Left gate
-            {1490, 425},  // Right gate
-            {720, 950}    // Bottom gate
+            {720, -60},    // Top gate (ngoài map phía trên)
+            {-60, 425},    // Left gate (ngoài map bên trái)
+            {1460, 425},   // Right gate (ngoài map bên phải)
+            {720, 910}     // Bottom gate (ngoài map phía dưới)
         };
         for (auto pos : spawnPositions) {
             for (int i = 0; i < waveCounter; i++) {
                 float offsetX = (i % 3) * 45.0f;
                 float offsetY = (i / 3) * 45.0f;
                 Vector2 newSpawnPos = { pos.x + offsetX, pos.y + offsetY };
-                EnemyManager::AddEnemy(new Goblin(newSpawnPos));
+
+                // Ensure the spawn position does not overlap with existing enemies or walls
+                bool validPosition = true;
+                for (auto& e : EnemyManager::GetEnemies()) {
+                    if (CheckCollisionRecs(Rectangle{newSpawnPos.x, newSpawnPos.y, 45.0f, 45.0f}, e->GetHitbox())) {
+                        validPosition = false;
+                        break;
+                    }
+                }
+                for (auto& w : WallManager::GetWalls()) {
+                    if (CheckCollisionRecs(Rectangle{newSpawnPos.x, newSpawnPos.y, 45.0f, 45.0f}, w->GetHitbox())) {
+                        validPosition = false;
+                        break;
+                    }
+                }
+
+                if (validPosition) {
+                    EnemyManager::AddEnemy(new Goblin(newSpawnPos));
+                }
             }
         }
-        if (waveCounter <= 1) waveCounter++;
+        if (waveCounter <= 3) waveCounter++;
         lastWaveSpawnTime = now;
     }
 

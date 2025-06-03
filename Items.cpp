@@ -25,6 +25,7 @@ Rectangle Item::GetHitbox() {
 
 void Item::Draw() {
     DrawTexture(texture, hitbox.x, hitbox.y, WHITE);
+    DrawRectangle(hitbox.x, hitbox.y, hitbox.width, hitbox.height, Color{255, 255, 0, 100});
 }
 
 Boost* Item::GetBoost() {
@@ -42,6 +43,11 @@ FireSpeedBoost::FireSpeedBoost(Vector2 pos) {
     hitbox.height = 25;
     hitbox.width = 25;
     effect = new FireSpeedBoostEffect();
+    spawnTime = GetTime();
+}
+
+bool Item::ShouldDespawn() const {
+    return (GetTime() - spawnTime) >= 5.0f;
 }
 
 vector<Item*>& ItemManager::GetItems() {
@@ -65,6 +71,9 @@ void ItemManager::Update() {
     for (auto it = items.begin(); it != items.end(); ) {
         if (CheckCollisionRecs(p.GetHitbox(), (*it)->GetHitbox())) {
             (*it)->Affect(p);
+            delete *it;
+            it = items.erase(it);
+        } else if ((*it)->ShouldDespawn()) {
             delete *it;
             it = items.erase(it);
         } else {

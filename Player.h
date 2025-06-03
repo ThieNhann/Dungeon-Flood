@@ -34,7 +34,9 @@ private:
     Direction direction;
     int speed;
     float fireCooldown;
+    int health;
 public:
+    int GetHealth();
     static Player& Instance();
     static Rectangle GetHitbox();
     Player();
