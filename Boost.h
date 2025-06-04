@@ -65,11 +65,32 @@ public:
     }
 };
 
+class HeartPlusEffect : public Boost {
+public:
+    HeartPlusEffect() { duration = 3.0f; }
+    void OnStart(Player& p) {
+        p.SetHealth(p.GetHealth() + 1);
+        p.SetHeartPlusInvincible(true);
+    }
+    void Apply(Player& p) {}
+    void OnEnd(Player& p) {
+        p.SetHeartPlusInvincible(false);
+    }
+};
+
 class BoostManager {
 public:
     static std::vector<Boost*> boosts;
 public:
     static void AddBoost(Boost* b, Player& p) {
+        // Reset duration if boost of same type exists, else add new
+        for (auto& existing : boosts) {
+            if (typeid(*existing) == typeid(*b)) {
+                existing->SetDuration(b->GetDuration());
+                delete b; // Prevent memory leak
+                return;
+            }
+        }
         b->OnStart(p);
         boosts.push_back(b);
     }

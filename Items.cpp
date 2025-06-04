@@ -6,18 +6,21 @@ vector<Boost*> BoostManager::boosts;
 Texture ItemTexture::fireSpeedBoost;
 Texture ItemTexture::multishot;
 Texture ItemTexture::piercing;
+Texture ItemTexture::heartPlus;
 
 // --- ItemTexture Implementation ---
 void ItemTexture::LoadItemTexture() {
     fireSpeedBoost = LoadTexture("resources/images/fireSpeedBoost.png");
     multishot = LoadTexture("resources/images/multishot.png");
     piercing = LoadTexture("resources/images/piercing.png");
+    heartPlus = LoadTexture("resources/images/heartPlus.png");
 }
 
 void ItemTexture::UnloadItemTexture() {
     UnloadTexture(fireSpeedBoost);
     UnloadTexture(multishot);
     UnloadTexture(piercing);
+    UnloadTexture(heartPlus);
 }
 
 Texture ItemTexture::GetTexture(ItemType t) {
@@ -25,6 +28,7 @@ Texture ItemTexture::GetTexture(ItemType t) {
         case FIRESPEEDBOOST: return fireSpeedBoost;
         case MULTISHOT: return multishot;
         case PIERCING: return piercing;
+        case HEARTPLUS: return heartPlus;
         default: return fireSpeedBoost;
     }
 }
@@ -83,6 +87,16 @@ Piercing::Piercing(Vector2 pos) {
     spawnTime = GetTime();
 }
 
+HeartPlus::HeartPlus(Vector2 pos) {
+    texture = ItemTexture::GetTexture(HEARTPLUS);
+    hitbox.x = pos.x;
+    hitbox.y = pos.y;
+    hitbox.height = ITEM_HEIGHT;
+    hitbox.width = ITEM_WIDTH;
+    effect = new HeartPlusEffect();
+    spawnTime = GetTime();
+}
+
 // --- ItemManager Implementation ---
 vector<Item*>& ItemManager::GetItems() {
     return items;
@@ -124,7 +138,7 @@ void ItemManager::Destruct() {
 
 // --- Item Spawning Function ---
 void ItemSpawn() {
-    static std::vector<ItemType> types = { FIRESPEEDBOOST, MULTISHOT, PIERCING };
+    static std::vector<ItemType> types = { FIRESPEEDBOOST, MULTISHOT, PIERCING, HEARTPLUS};
     static float lastSpawnTime = 0.0f;
     float now = GetTime();
 
@@ -145,6 +159,9 @@ void ItemSpawn() {
                 break;
             case PIERCING:
                 item = new Piercing({x, y});
+                break;
+            case HEARTPLUS:
+                item = new HeartPlus({x, y});
                 break;
         }
         

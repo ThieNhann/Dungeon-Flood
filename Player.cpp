@@ -38,8 +38,9 @@ Player::Player() {
     texture.LoadTextures();
     fireCooldown = PLAYER_FIRE_COOLDOWN;
     multishotMode = false;
-    invincibleMode = false;
     piercingMode = false;
+    damageInvincible = false;
+    heartPlusInvincible = false;
 }
 
 Player& Player::Instance() {
@@ -52,7 +53,7 @@ Rectangle Player::GetHitbox() {
 }
 void Player::DrawPlayer() {
     DrawTextureV(texture.GetTexture(direction), {hitbox.x, hitbox.y}, WHITE);
-    if (invincibleMode) 
+    if (GetInvincibleMode()) 
     {
         DrawTexture(IconTexture::heartProtection, hitbox.x + HEART_PROTECTION_OFFSET_X, hitbox.y + HEART_PROTECTION_OFFSET_Y, WHITE);
     }
@@ -97,23 +98,24 @@ void Player::Update() {
     static float lastHealthLossTime = -PLAYER_INVINCIBLE_TIME;
     float currentTime = GetTime();
 
-
-    bool collidedWithEnemy = false;
     for (auto& en : EnemyManager::GetEnemies()) {
         if (!en->isDead() && CheckCollisionRecs(newHitbox, en->GetHitbox())) {
-            collidedWithEnemy = true;
-            if ((currentTime - lastHealthLossTime) >= PLAYER_INVINCIBLE_TIME) {
-                if (health > 0) health--;
-                PlaySound(SFX::hurt);
+            // Only take damage if not currently damage-invincible
+            if (!damageInvincible && (currentTime - lastHealthLossTime) >= PLAYER_INVINCIBLE_TIME) {
+                if (GetHealth() > 0) {
+                    SetHealth(GetHealth() - 1);
+                }
+                
                 lastHealthLossTime = currentTime;
-                invincibleMode = true;
+                SetDamageInvincible(true);
             }
             collision = true;
             break;
         }
     }
-    if (!collidedWithEnemy && (currentTime - lastHealthLossTime) >= PLAYER_INVINCIBLE_TIME) {
-        invincibleMode = false;
+    // Turn off damage invincibility after duration
+    if (damageInvincible && (currentTime - lastHealthLossTime) >= PLAYER_INVINCIBLE_TIME) {
+        SetDamageInvincible(false);
     }
 
     for (auto& w : WallManager::GetWalls()) {
@@ -191,4 +193,29 @@ void Player::SetPiercingMode(bool m) {
 
 bool Player::GetPiercingMode() {
     return piercingMode;
+}
+
+bool Player::GetInvincibleMode() {
+    return damageInvincible || heartPlusInvincible;
+}
+
+void Player::SetDamageInvincible(bool m) {
+    damageInvincible = m;
+}
+
+bool Player::GetDamageInvincible() {
+    return damageInvincible;
+}
+
+void Player::SetHeartPlusInvincible(bool m) {
+    heartPlusInvincible = m;
+}
+
+bool Player::GetHeartPlusInvincible() {
+    return heartPlusInvincible;
+}
+
+void Player::SetHealth(int h) {
+    health = h;
+    if (h < GetHealth()) PlaySound(SFX::hurt);
 }

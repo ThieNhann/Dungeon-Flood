@@ -38,9 +38,11 @@ private:
     float fireCooldown;
     int health;
     bool multishotMode;
-    bool invincibleMode;
     bool piercingMode;
+    bool damageInvincible;      // new: for damage invincibility
+    bool heartPlusInvincible;   // new: for HeartPlus item invincibility
 public:
+    void SetHealth(int h);
     int GetHealth();
     static Player& Instance();
     static Rectangle GetHitbox();
@@ -55,6 +57,15 @@ public:
     void SetMultishotMode(bool m);
     void SetPiercingMode(bool m);
     bool GetPiercingMode();
+
+    // invincibleMode is now a derived property
+    bool GetInvincibleMode();
+
+    // New: invincibility source management
+    void SetDamageInvincible(bool m);
+    bool GetDamageInvincible();
+    void SetHeartPlusInvincible(bool m);
+    bool GetHeartPlusInvincible();
 };
 
 #endif
