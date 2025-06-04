@@ -98,6 +98,7 @@ void Player::Update() {
     static float lastHealthLossTime = -PLAYER_INVINCIBLE_TIME;
     float currentTime = GetTime();
 
+    // Always check collision with enemy, regardless of movement input
     for (auto& en : EnemyManager::GetEnemies()) {
         if (!en->isDead() && CheckCollisionRecs(newHitbox, en->GetHitbox())) {
             // Only take damage if not currently damage-invincible
@@ -105,7 +106,6 @@ void Player::Update() {
                 if (GetHealth() > 0) {
                     SetHealth(GetHealth() - 1);
                 }
-                
                 lastHealthLossTime = currentTime;
                 SetDamageInvincible(true);
             }
