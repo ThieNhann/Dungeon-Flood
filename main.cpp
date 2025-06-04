@@ -37,11 +37,14 @@ int main () {
             FireballManager::RemoveOutOfBoundFireballs();
             EnemyManager::Update();
             ItemManager::Update();
+            FireballManager::Update(); // Thêm dòng này để xử lý va chạm fireball-enemy
         }
         UpdateMusicStream(SFX::bgMusic);
         
         ItemSpawn();
 
+        // Xóa toàn bộ đoạn xử lý va chạm fireball-enemy ở đây
+        /*
         auto& fireballs = FireballManager::GetFireballs();
         for (auto it = fireballs.begin(); it != fireballs.end();) {
             bool hit = false;
@@ -69,6 +72,7 @@ int main () {
             }
             if (!hit) ++it;
         }
+        */
 
         BeginDrawing();
 

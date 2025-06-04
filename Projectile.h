@@ -39,6 +39,7 @@ public:
     static void AddFireball(Fireball& f);
     static void Draw();
     static void RemoveOutOfBoundFireballs();
+    static void Update();
     static void Destruct() {
         fireballs.clear();
     }
